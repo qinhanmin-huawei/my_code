@@ -51,8 +51,8 @@
             return out_t
         def op_calc_1(input, out_t):
             y = torch.ops.aten.glu.out(input, dim = 0, out = out_t)
-            return out_t + 1
-        out_shape = [shape[0] // 2, shape[1], shape[2]]
+            return out_t + out_t
+        out_shape  = (shape[0] // 2,) + shape[1:]
         out_t = torch.empty(out_shape,  device='npu', dtype = eval("torch."+dtype))
         input = self._generate_tensor(shape, dtype)
         self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, input, out_t)

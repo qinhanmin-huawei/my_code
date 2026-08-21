@@ -54,8 +54,11 @@ torch.ops.aten.glu.out(
 以下示例实现了原子异或计算：
 
 ```python
-    @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    @parametrize('dtype', TestUtils._test_dtypes)
+    dtypes = ['float16', 'bfloat16', 'float32']
+    shapes = [(128,), (128, 128), (128, 1024, 4096), (128, 128, 1024, 4096)]
+
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten_glu_out(self, shape, dtype):
         def op_calc(input, out_t):
             y = torch.ops.aten.glu.out(input, dim = 0, out = out_t)

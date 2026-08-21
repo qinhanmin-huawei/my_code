@@ -51,7 +51,6 @@ torch.ops.aten.glu.out(
 
 ### 2.4 使用方法
 
-以下示例实现了原子异或计算：
 
 ```python
     dtypes = ['float16', 'bfloat16', 'float32']

@@ -3,7 +3,7 @@
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-prims.sqrt.default(self: Tensor) -> Tensor
+torch.ops.prims.sqrt.default(self: Tensor) -> Tensor
 ```
 ### 1.2 算子功能
 `prims.sqrt.default`用于对输入张量（Tensor）执行逐元素（Element-wise）的平方根计算。

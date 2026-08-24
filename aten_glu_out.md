@@ -54,7 +54,7 @@ torch.ops.aten.glu.out(
 
 ```python
     dtypes = ['float16', 'bfloat16', 'float32']
-    shapes = [(128,), (128, 128), (128, 1024, 4096), (128, 128, 1024, 4096)]
+    shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
     @parametrize('shape', shapes)
     @parametrize('dtype', dtypes)

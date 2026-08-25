@@ -51,7 +51,7 @@ torch.ops.aten.as_stride_copy.out(self: Tensor, size: int[], stride: int[], stor
 
     @parametrize('shape', shapes)
     @parametrize('dtype', dtypes)
-    def test_aten_as_stride_copy_default(self, shape, dtype):
+    def test_aten_as_stride_copy(self, shape, dtype):
         def op_calc(input):
             size = list(input.shape)
             stride = list(input.stride())

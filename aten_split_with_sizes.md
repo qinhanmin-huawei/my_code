@@ -46,7 +46,7 @@ torch.ops.aten.split_with_sizes(self: Tensor, split_sizes: int[], dim: int = 0) 
 
     @parametrize('shape', shapes)
     @parametrize('dtype', dtypes)
-    def test_aten_split_with_sizes_default(self, shape, dtype):
+    def test_aten_split_with_sizes(self, shape, dtype):
         def op_calc(input, split_sizes):
             y = torch.ops.aten.split_with_sizes(input, split_sizes, dim=0)
             return y[0]

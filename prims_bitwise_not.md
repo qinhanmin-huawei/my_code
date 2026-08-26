@@ -1,12 +1,12 @@
-# aten.bitwise_not
+# prims.bitwise_not
 
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.bitwise_not(self: Tensor) -> Tensor
+torch.ops.prims.bitwise_not(self: Tensor) -> Tensor
 ```
 ### 1.2 算子功能
-`aten.bitwise_not` 
+`prims.bitwise_not` 
 *   **整型按位翻转**：对输入张量中每个整数的二进制位进行逐位翻转（`0` 变 `1`，`1` 变 `0`）。根据计算机补码原理，对于有符号整数，`~x` 的数学结果等于 `-(x + 1)`。
 *   **布尔型逻辑反转**：如果输入是布尔矩阵，算子会将所有 `True` 转换为 `False`，`False` 转换为 `True`。
 
@@ -49,13 +49,13 @@ torch.ops.aten.bitwise_not(self: Tensor) -> Tensor
 
     @parametrize('shape', shapes)
     @parametrize('dtype', dtypes)
-    def test_aten_bitwise_not(self, shape, dtype):
+    def test_prims_bitwise_not(self, shape, dtype):
         def op_calc(first_element):
-            y = torch.ops.aten.bitwise_not(first_element)
+            y = torch.ops.prims.bitwise_not(first_element)
             return y
 
         def op_calc_1(first_element):
-            y = torch.ops.aten.bitwise_not(first_element)
+            y = torch.ops.prims.bitwise_not(first_element)
             return y + y
         first_element = self._generate_tensor(shape, dtype)
         self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, first_element)

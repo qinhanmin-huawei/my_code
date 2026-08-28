@@ -3,7 +3,7 @@
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.alias.default(self: Tensor) -> Tensor
+torch.ops.aten.alias(self: Tensor) -> Tensor
 ```
 ### 1.2 算子功能
 `aten.alias` 返回与输入张量共享相同底层存储的视图（View）张量。对返回张量的修改会反映到原始张量上，反之亦然。

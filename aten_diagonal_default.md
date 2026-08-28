@@ -6,7 +6,7 @@
 torch.ops.aten.diagonal.default(self: Tensor, offset: int = 0, dim1: int = 0, dim2: int = 1) -> Tensor
 ```
 ### 1.2 算子功能
-`aten.diagonal.default` 是 `aten.diagonal` 的默认重载（default overload），其功能与 `aten.diagonal` 一致：提取输入张量 `self` 中由 `dim1`、`dim2` 两个维度与 `offset` 共同确定的对角线元素，并作为**视图**返回。该算子返回的张量与 `self` 共享底层存储，对视图的修改会反映到原张量上，与拷贝语义的 `diagonal_copy` 不同。
+`aten.diagonal.default` 是 `aten.diagonal` 的默认重载（default overload），其功能与 `aten.diagonal` 一致：提取输入张量 `self` 中由 `dim1`、`dim2` 两个维度与 `offset` 共同确定的对角线元素，并作为视图返回。该算子返回的张量与 `self` 共享底层存储，对视图的修改会反映到原张量上，与拷贝语义的 `diagonal_copy` 不同。
 
 ## 2. OP 规格
 
@@ -33,7 +33,6 @@ torch.ops.aten.diagonal.default(self: Tensor, offset: int = 0, dim1: int = 0, di
 
 1、shape维度范围：[2-4]（需至少 2 维，且 `dim1` 与 `dim2` 不同）
 
-2、`offset` 的绝对值不能超过 `min(self.shape[dim1], self.shape[dim2])`
 
 ### 2.3 特殊限制说明
 
@@ -43,20 +42,16 @@ torch.ops.aten.diagonal.default(self: Tensor, offset: int = 0, dim1: int = 0, di
 
 ```python
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
-    shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
+    shapes = [(128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
     @parametrize('shape', shapes)
     @parametrize('dtype', dtypes)
     def test_aten_diagonal_default(self, shape, dtype):
         def op_calc(input):
-            dim1 = input.dim() - 2
-            dim2 = input.dim() - 1
-            y = torch.ops.aten.diagonal.default(input, offset = 0, dim1 = dim1, dim2 = dim2)
+            y = torch.ops.aten.diagonal.default(input, offset = 0, dim1 = 0, dim2 = 1)
             return y
         def op_calc_1(input):
-            dim1 = input.dim() - 2
-            dim2 = input.dim() - 1
-            y = torch.ops.aten.diagonal.default(input, offset = 0, dim1 = dim1, dim2 = dim2)
+            y = torch.ops.aten.diagonal.default(input, offset = 0, dim1 = 0, dim2 = 1)
             return y + y
         input = self._generate_tensor(shape, dtype)
         self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, input)

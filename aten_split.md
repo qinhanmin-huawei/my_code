@@ -29,8 +29,8 @@ torch.ops.aten.split(Tensor self, SymInt split_size, int dim=0) -> Tensor[]
 
 | |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- |  ---  |  --- |  --- | --- |  ---  |  --- | --- | --- | --- | --- |
-| GPU |  | √ |  |  |  | √ |  | √ | √ | √ | √ |  |
-| NPU |  | √ |  |  |  | √ |  | √ | √ | √ | √ |  |
+| GPU |  | √ |  |  |  | √ |  | √ | √ | √ | √ | √ |
+| NPU |  | √ |  |  |  | √ |  | √ | √ | √ | √ | √ |
 
 #### 2.2.2 Shape 支持
 
@@ -45,7 +45,7 @@ torch.ops.aten.split(Tensor self, SymInt split_size, int dim=0) -> Tensor[]
 ### 2.4 使用方法
 
 ```python
-    dtypes = ['int8','int32','int64','float16', 'bfloat16', 'float32']
+    dtypes = ['int8','int32','int64','float16', 'bfloat16', 'float32','bool']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
     @parametrize('dtype', TestUtils._test_dtypes)

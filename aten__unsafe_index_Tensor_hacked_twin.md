@@ -9,7 +9,7 @@ torch.ops.aten._unsafe_index.Tensor_hacked_twin(
 ) -> Tensor
 ```
 ### 1.2 算子功能
-`aten._unsafe_index.Tensor_hacked_twin` 是高级索引算子的 **NPU hacked twin 变体**（torch_npu 扩展提供）。执行与 `aten.index.Tensor` 相同的高级索引操作，并额外返回一个 twin 输出张量：
+`aten._unsafe_index.Tensor_hacked_twin`执行与 `aten.index.Tensor` 相同的高级索引操作，并额外返回一个 twin 输出张量：
 
 1. **unsafe 语义**：它是标准 aten::index 的优化版本。它在底层跳过了对索引是否越界（Out-of-Bounds）的运行时检查。这大幅降低了 CPU/GPU 之间的同步开销，通常由编译器（如 torch.compile）在确认索引数据在数学上绝对安全时（例如双线性插值、上采样等内部生成的索引）自动生成。
 2. **Hacked Twin**：标准的 PyTorch 索引允许列表内混入 None（如 [None, index_tensor]）。为了让底层图编译器（如 Torch-MLIR、昇腾 CANN 等）能够进行静态类型推导，该算子通过内部手段（Hack）将输入规范化，强制要求索引列表必须是纯粹的张量数组 Tensor[]，移除了所有 None 元素。

@@ -1,12 +1,12 @@
-# aten.lift_fresh_copy.default
+# aten.lift_fresh_copy
 
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.lift_fresh_copy.default(self: Tensor) -> Tensor
+torch.ops.aten.lift_fresh_copy(self: Tensor) -> Tensor
 ```
 ### 1.2 算子功能
-`aten.lift_fresh_copy.default`：在内存中为输入的 self 张量深拷贝出一份完全独立的新数据块（与原张量不共享 Storage）。
+`aten.lift_fresh_copy`：在内存中为输入的 self 张量深拷贝出一份完全独立的新数据块（与原张量不共享 Storage）。
 
 ## 2. OP 规格
 
@@ -15,7 +15,7 @@ torch.ops.aten.lift_fresh_copy.default(self: Tensor) -> Tensor
 | 参数名           | 类型                | 说明                                                             |
 | ------------- | ----------------- | -------------------------------------------------------------- |
 | `self/input`        | `Tensor`          | 参与计算的源张量 |
-| `out`(返回值)      | `Tensor`| 一个新的张量，形状和元素与输入一致 |
+| 返回值      | `Tensor`| 一个新的张量，形状和元素与输入一致 |
 
 
 ### 2.2 支持规格
@@ -45,12 +45,12 @@ torch.ops.aten.lift_fresh_copy.default(self: Tensor) -> Tensor
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
-    def test_aten_lift_fresh_copy_default(self, shape, dtype):
+    def test_aten_lift_fresh_copy(self, shape, dtype):
         def op_calc(x):
-            z = torch.ops.aten.lift_fresh_copy.default(x)
+            z = torch.ops.aten.lift_fresh_copy(x)
             return z
         def op_calc_1(x):
-            z = torch.ops.aten.lift_fresh_copy.default(x)
+            z = torch.ops.aten.lift_fresh_copy(x)
             return z + z
 
         first_element = self._generate_tensor(shape, dtype)

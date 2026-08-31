@@ -17,6 +17,8 @@ torch.ops.aten.glu.out(
 2. **门控计算**：将后半部分 $b$ 通过 Sigmoid 激活函数（$\sigma$）转换为门控权重，并与前半部分 $a$ 进行逐元素相乘（Hadamard Product）。
 3. **输出重定向**：最终的计算结果会直接覆盖或写入到预先指定的 `out` 张量中。
 
+数学表达式为：
+$$\text{GLU}(a, b) = a \otimes \sigma(b)$$
 
 ## 2. OP 规格
 

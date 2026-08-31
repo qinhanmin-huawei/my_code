@@ -19,7 +19,7 @@ torch.ops.aten.bitwise_or.Tensor(self: Tensor, other: Tensor) -> Tensor
 | ------------- | ----------------- | -------------------------------------------------------------- |
 | `self`/`input` | `Tensor` | 第一个输入张量 |
 | `other` | `Tensor` | 第二个输入张量，须与 `input` 可广播（broadcastable）且类型相同 |
-| `out`（返回值） | `Tensor` | 一个新的张量，形状与广播后的输入一致，包含计算后的结果 |
+| 返回值 | `Tensor` | 一个新的张量，形状与广播后的输入一致，包含计算后的结果 |
 
 
 ### 2.2 支持规格

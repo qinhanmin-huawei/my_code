@@ -23,8 +23,8 @@ torch.ops.aten.round.default(Tensor self) -> Tensor
 
 | |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- |  ---  |  --- |  --- | --- |  ---  |  --- | --- | --- | --- | --- |
-| GPU |  | √ |  |  |  | √ |  | √ | √ | √ | √ | × |
-| NPU |  | √ |  |  |  | √ |  | √ | √ | √ | √ | × |
+| GPU | - | √ | - | - | - | √ |  | √ | √ | √ | √ | × |
+| NPU | - | √ | - | - | - | √ |  | √ | √ | √ | √ | × |
 
 #### 2.2.2 Shape 支持
 

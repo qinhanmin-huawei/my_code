@@ -45,8 +45,8 @@ torch.ops.aten.log2(Tensor self) -> Tensor
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
-    @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    @parametrize('dtype', TestUtils._test_dtypes)
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten_log2(self, shape, dtype):
         def op_calc(first_element):
             x = first_element

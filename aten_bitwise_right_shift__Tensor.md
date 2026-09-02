@@ -49,8 +49,8 @@ torch.ops.aten.bitwise_right_shift_.Tensor(self: Tensor(a!), other: Tensor) -> T
     dtypes = ['int8', 'int32', 'int64']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
-    @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    @parametrize('dtype', TestUtils._test_dtypes)
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten_bitwise_right_shift__Tensor(self, shape, dtype):
         def op_calc(first_element, second_element):
             torch.ops.aten.bitwise_right_shift_.Tensor(first_element, second_element)

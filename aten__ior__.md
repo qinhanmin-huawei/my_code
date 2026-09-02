@@ -49,8 +49,8 @@ torch.ops.aten.__ior__(self: Tensor(a!), other: Scalar) -> Tensor(a!)
     dtypes = ['int8', 'int32', 'int64', 'bool']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
-    @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    @parametrize('dtype', TestUtils._test_dtypes)
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten___ior__(self, shape, dtype):
         def op_calc(tensor, tensor2):
             y = torch.ops.aten.__ior__(tensor, tensor2)

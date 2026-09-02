@@ -45,8 +45,8 @@ torch.ops.prims.log2.default(Tensor self) -> Tensor
 ```python
     dtypes = ['float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
-    @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    @parametrize('dtype', TestUtils._test_dtypes)
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_prims_log2_default(self, shape, dtype):
         def op_calc(first_element):
             x = first_element

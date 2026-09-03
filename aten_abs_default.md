@@ -1,12 +1,13 @@
-# aten.lift_fresh_copy.out
+# aten.abs.default
 
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.lift_fresh_copy.out(self: Tensor, *, out: Tensor) -> Tensor
+torch.ops.aten.abs.default(Tensor self) -> Tensor
 ```
 ### 1.2 算子功能
-`aten.lift_fresh_copy.out`：在内存中为输入的 self 张量深拷贝出一份完全独立的新数据块（与原张量不共享 Storage）。
+`aten.abs.default` 是 `aten.abs` 的默认重载（default overload），其功能与 `aten.abs` 一致：一个逐元素（Element-wise）数学算子，用于计算输入张量 `self` 中每个元素的绝对值。
+
 
 ## 2. OP 规格
 
@@ -14,8 +15,8 @@ torch.ops.aten.lift_fresh_copy.out(self: Tensor, *, out: Tensor) -> Tensor
 
 | 参数名           | 类型                | 说明                                                             |
 | ------------- | ----------------- | -------------------------------------------------------------- |
-| `self/input`        | `Tensor`          | 参与计算的源张量 |
-| `out`      | `Tensor`| 接收拷贝数据的目标张量，张量的形状、数据类型以及设备必须与 self 张量完全匹配|
+| `self`        | `Tensor`          | 参与计算的源张量 |
+| 返回值      | `Tensor`| 一个新的张量，形状与输入一致，包含每个元素取绝对值后的结果 |
 
 
 ### 2.2 支持规格
@@ -26,7 +27,6 @@ torch.ops.aten.lift_fresh_copy.out(self: Tensor, *, out: Tensor) -> Tensor
 | ------ | ---- | ---- |  ----  |  ---- |  ---- | ----- | -----  |  ----- | ----- | ------ | ------ | ------ |
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | √     | √      | √      | ×      |
 | NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | √     | √      | √      | ×      |
-
 
 #### 2.2.2 Shape 支持
 
@@ -42,17 +42,18 @@ torch.ops.aten.lift_fresh_copy.out(self: Tensor, *, out: Tensor) -> Tensor
 
 
 ```python
-    dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
+    dtypes = ['int8', 'int32', 'int64','float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
-    def test_aten_lift_fresh_copy_out(self, shape, dtype):
-        def op_calc(x):
-            z = torch.ops.aten.lift_fresh_copy.out(x)
-            return z
-        def op_calc_1(x):
-            z = torch.ops.aten.lift_fresh_copy.out(x)
-            return z + z
-
-        first_element = self._generate_tensor(shape, dtype)
-        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, first_element)
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
+    def test_aten_abs_default(self, shape, dtype):
+        def op_calc(first_element):
+            y = torch.ops.aten.abs.default(first_element)
+            return y
+        def op_calc_1(first_element):
+            y = torch.ops.aten.abs.default(first_element)
+            return y + y
+        tensor1 = self._generate_tensor(shape, dtype)
+        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensor1)
 ```

@@ -12,9 +12,7 @@ torch.ops.aten.div_.Tensor(self: Tensor(a!), other: Tensor) -> Tensor(a!)
 
 `aten.div_.Tensor` 对 `self` 和 `other` 执行逐元素真除法，并将结果原地写回 `self`：
 
-\[
-\text{self}_i \leftarrow \frac{\text{self}_i}{\text{other}_i}
-\]
+`self_i = self_i / other_i`
 
 `other` 可以按照 PyTorch 广播规则扩展，但广播后的结果形状必须与 `self.shape` 完全相同，因为原地操作不能改变 `self` 的形状。返回值与修改后的 `self` 别名，具有相同的 dtype、shape、device 和底层存储。
 

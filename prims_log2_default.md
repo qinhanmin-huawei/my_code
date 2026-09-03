@@ -27,8 +27,8 @@ torch.ops.prims.log2.default(Tensor self) -> Tensor
 
 | |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- |  ---  |  --- |  --- | --- |  ---  |  --- | --- | --- | --- | --- |
-| GPU |  | × |  |  |  | × |  | × | √ | √ | √ | × |
-| NPU |  | × |  |  |  | × |  | × | √ | √ | √ | × |
+| GPU    | -    | ×    |  -     |  -    |  -    | ×     | -      | ×      | √     | √      | √      | ×      |
+| NPU    | -    | ×    |  -     |  -    |  -    | ×     | -      | ×      | √     | √      | √      | ×      |
 
 #### 2.2.2 Shape 支持
 
@@ -45,8 +45,8 @@ torch.ops.prims.log2.default(Tensor self) -> Tensor
 ```python
     dtypes = ['float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
-    @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    @parametrize('dtype', TestUtils._test_dtypes)
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_prims_log2_default(self, shape, dtype):
         def op_calc(first_element):
             x = first_element

@@ -50,6 +50,8 @@ torch.ops.aten.bitwise_or.Scalar_out(self: Tensor, other: Scalar, *, out: Tensor
     dtypes = ['int8', 'int32', 'int64', 'bool']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten_bitwise_or_Scalar_out(self, shape, dtype):
         def op_calc(tensor, out_t):
             y = torch.ops.aten.bitwise_or.Scalar_out(tensor, 6, out = out_t)

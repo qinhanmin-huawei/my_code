@@ -6,7 +6,7 @@
 torch.ops.aten.sub.Tensor(self: Tensor, other: Tensor, *, alpha: Scalar = 1) -> Tensor
 ```
 ### 1.2 算子功能
-1、`aten.sub.Tensor` 是逐元素（Element-wise）的减法算子：对输入张量 `self` 与 `other` 中对应元素执行减法 \(out_i = self_i - alpha \times other_i\)，默认 `alpha = 1`。
+1、`aten.sub.Tensor` 是逐元素（Element-wise）的减法算子：对输入张量 `self` 与 `other` 中对应元素执行减法 out = self - alpha × other，默认 `alpha = 1`。
 2、`self` 与 `other` 支持广播（broadcasting），输出张量的形状与广播后的输入一致，dtype 与输入相同（同 dtype 输入时无类型提升）。
 
 ## 2. OP 规格
@@ -17,7 +17,7 @@ torch.ops.aten.sub.Tensor(self: Tensor, other: Tensor, *, alpha: Scalar = 1) -> 
 | ------------- | ----------------- | -------------------------------------------------------------- |
 | `self`/`input` | `Tensor` | 被减数张量 |
 | `other` | `Tensor` | 减数张量，须与 `self` 可广播（broadcastable） |
-| `alpha` | `Scalar` | 减数的缩放系数，默认为 `1`，即 \(out = self - alpha \times other\) |
+| `alpha` | `Scalar` | 减数的缩放系数，默认为 `1`，即 out = self - alpha × other |
 | 返回值 | `Tensor` | 一个新的张量，形状与广播后的输入一致，dtype 与输入相同（同 dtype 输入时） |
 
 ### 2.2 支持规格

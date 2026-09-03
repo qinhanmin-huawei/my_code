@@ -6,7 +6,7 @@
 torch.ops.aten.floor.out(self: Tensor, *, out: Tensor) -> Tensor
 ```
 ### 1.2 算子功能
-1、`aten.floor.out` 对输入张量 `self` 中的每个元素 \(x_i\) 向下取整：计算 \(out_i = \lfloor x_i \rfloor\)，即返回**不大于 \(x_i\) 的最大整数**（向负无穷方向取整）。
+1、`aten.floor.out` 对输入张量 `self` 中的每个元素 x 向下取整：计算 y = ⌊x⌋，即返回不大于 x 的最大整数（向负无穷方向取整）。
 2、计算结果直接覆盖写入调用方预先指定的 `out` 张量，输出形状与输入一致，dtype 与输入相同。
 
 ## 2. OP 规格

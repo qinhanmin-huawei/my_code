@@ -6,7 +6,7 @@
 torch.ops.aten.floor(Tensor self) -> Tensor
 ```
 ### 1.2 算子功能
-1、`aten.floor` 是一个逐元素（Element-wise）的向下取整数学算子：对输入张量中的每个元素 \(x_i\)，计算 \(out_i = \lfloor x_i \rfloor\)，即返回**不大于 \(x_i\) 的最大整数**（向负无穷方向取整），例如 floor(2.3) = 2、floor(-2.3) = -3。
+1、`aten.floor` 是逐元素（Element-wise）的向下取整数学算子：对输入张量中的每个元素 x 计算 y = ⌊x⌋，即返回不大于 x 的最大整数（向负无穷方向取整），例如 floor(2.3) = 2、floor(-2.3) = -3。
 2、输出张量的形状与输入一致，结果与输入保持相同 dtype。
 
 ## 2. OP 规格

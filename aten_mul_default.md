@@ -21,8 +21,8 @@ torch.ops.aten.mul.default(Scalar a, Scalar b) -> Scalar
 #### 2.2.1 DataType 支持
 |        | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | ------ | ---- | ---- |  ----  |  ---- |  ----  | ----- | ----- | ----- | ----- | ------ | ------ | ------ | --------- | ---------- |
-| GPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | √         | ×         |
-| NPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | √         | ×          |
+| GPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | √         | √         |
+| NPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | -         | -          |
 
 #### 2.2.2 Shape 支持
 1、仅支持零维标量输入，不涉及 shape 泛化。
@@ -33,4 +33,19 @@ torch.ops.aten.mul.default(Scalar a, Scalar b) -> Scalar
 > 本文仅覆盖 `aten.mul.default` 重载。固定标量可能在编译阶段常量折叠，因此暂不做性能和 lowering 验证，仅维护规格。
 
 ### 2.4 使用方法
-> 该纯标量算子暂不编写测试用例。
+```python
+    def test_aten_mul_default(self):
+        def op_calc(anchor, first_scalar, second_scalar):
+            scalar_result = torch.ops.aten.mul.default(first_scalar, second_scalar)
+            return anchor + scalar_result
+
+        def op_calc_1(anchor, first_scalar, second_scalar):
+            scalar_result = torch.ops.aten.mul.default(first_scalar, second_scalar)
+            return anchor + scalar_result + scalar_result
+
+        anchor = torch.zeros((128,), dtype=torch.float32, device='npu')
+        first_scalar, second_scalar = 2.0, 3.0
+        self.execute_inductor_test((128,), 'float32', op_calc, op_calc_1,
+                                   anchor, first_scalar, second_scalar,
+                                   op_name='aten.add')
+```

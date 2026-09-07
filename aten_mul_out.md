@@ -22,7 +22,7 @@ torch.ops.aten.mul.out(Tensor self, Tensor other, *, Tensor(a!) out) -> Tensor(a
 #### 2.2.1 DataType 支持
 |        | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | ------ | ---- | ---- |  ----  |  ---- |  ----  | ----- | ----- | ----- | ----- | ------ | ------ | ------ | --------- | ---------- |
-| GPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | -         | -          |
+| GPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | √         | √          |
 | NPU    | -    | √    | -      | -     | -      | √     | -     | √     | √     | √      | √      | √      | -         | -          |
 
 #### 2.2.2 Shape 支持
@@ -30,9 +30,9 @@ torch.ops.aten.mul.out(Tensor self, Tensor other, *, Tensor(a!) out) -> Tensor(a
 
 2、`self` 与 `other` 须形状相同或满足广播规则；`out` 的形状须与广播结果一致。
 
-3、输入参数 `self`、`other` 以及输出参数 `out` 支持 `int8`、`int32`、`int64`、`float16`、`float32`、`bfloat16`、`bool`、`complex64`；`complex128` 不支持。
+3、输入参数 `self`、`other` 以及输出参数 `out` 支持 `int8`、`int32`、`int64`、`float16`、`float32`、`bfloat16`、`bool`。
 ### 2.3 特殊限制说明
-> `out` 的设备和数据类型应与计算结果兼容；`complex128` 不支持。本文仅覆盖 `aten.mul.out` 重载。
+> `out` 的设备和数据类型应与计算结果兼容。本文仅覆盖 `aten.mul.out` 重载。
 
 ### 2.4 使用方法
 ```python

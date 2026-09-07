@@ -33,4 +33,19 @@ torch.ops.aten.mul.float_int(float a, int b) -> float
 > 本文仅覆盖 `aten.mul.float_int` 重载。固定标量可能在编译阶段常量折叠，因此暂不做性能和 lowering 验证，仅维护规格。浮点与整数输入的支持类型按并集标记。
 
 ### 2.4 使用方法
-> 该纯标量算子暂不编写测试用例。
+```python
+    def test_aten_mul_float_int(self):
+        def op_calc(anchor, float_value, int_value):
+            scalar_result = torch.ops.aten.mul.float_int(float_value, int_value)
+            return anchor + scalar_result
+
+        def op_calc_1(anchor, float_value, int_value):
+            scalar_result = torch.ops.aten.mul.float_int(float_value, int_value)
+            return anchor + scalar_result + scalar_result
+
+        anchor = torch.zeros((128,), dtype=torch.float32, device='npu')
+        float_value, int_value = 2.5, 3
+        self.execute_inductor_test((128,), 'float32', op_calc, op_calc_1,
+                                   anchor, float_value, int_value,
+                                   op_name='aten.add')
+```

@@ -1,14 +1,14 @@
-# prims.remainder
+# prims.remainder.default
 
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.prims.remainder(self: Tensor, other: Tensor) -> Tensor
+torch.ops.prims.remainder.default(self: Tensor, other: Tensor) -> Tensor
 ```
 
 
 ### 1.2 算子功能
-`prims.remainder` 计算输入张量 `self` 中每个元素与 `other` 的**逐元素取余（remainder）** 运算，并返回新的张量。
+`prims.remainder.default` 计算输入张量 `self` 中每个元素与 `other` 的**逐元素取余（remainder）** 运算，并返回新的张量。
 
 - 对于整数张量：执行整数取余，结果符号与被除数（即 `self` 的元素）相同。
 - 对于浮点张量：执行浮点取余，结果为 `self - other * floor(self / other)`，符号与被除数相同。

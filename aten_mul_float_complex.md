@@ -21,7 +21,7 @@ torch.ops.aten.mul.float_complex(float a, complex b) -> complex
 #### 2.2.1 DataType 支持
 |        | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | ------ | ---- | ---- |  ----  |  ---- |  ----  | ----- | ----- | ----- | ----- | ------ | ------ | ------ | --------- | ---------- |
-| GPU    | -    | ×    | -      | -     | -      | ×     | -     | ×     | √     | √      | √      | ×      | √         | ×          |
+| GPU    | -    | ×    | -      | -     | -      | ×     | -     | ×     | √     | √      | √      | ×      | √         | √          |
 | NPU    | -    | ×    | -      | -     | -      | ×     | -     | ×     | √     | √      | √      | ×      | √         | ×          |
 
 #### 2.2.2 Shape 支持

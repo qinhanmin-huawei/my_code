@@ -33,4 +33,19 @@ torch.ops.aten.mul.complex_float(complex a, float b) -> complex
 > 标量算子不涉及 shape 泛化。该算子会在编译阶段对固定标量进行常量折叠，因此暂不做性能和 lowering 验证，仅维护规格。复数操作数应使用统一精度；`b` 为浮点标量。复数与浮点输入的支持类型按并集标记。
 
 ### 2.4 使用方法
-> 该纯标量算子会在编译阶段发生常量折叠，暂不编写测试用例。
+```python
+    def test_aten_mul_complex_float(self):
+        def op_calc(anchor, complex_value, float_value):
+            scalar_result = torch.ops.aten.mul.complex_float(complex_value, float_value)
+            return anchor + scalar_result
+
+        def op_calc_1(anchor, complex_value, float_value):
+            scalar_result = torch.ops.aten.mul.complex_float(complex_value, float_value)
+            return anchor + scalar_result + scalar_result
+
+        anchor = torch.zeros((128,), dtype=torch.complex64, device='npu')
+        complex_value, float_value = complex(1.0, 2.0), 3.0
+        self.execute_inductor_test((128,), 'complex64', op_calc, op_calc_1,
+                                   anchor, complex_value, float_value,
+                                   op_name='aten.add')
+```

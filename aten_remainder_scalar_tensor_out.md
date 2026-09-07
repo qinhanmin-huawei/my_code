@@ -53,7 +53,8 @@ torch.ops.aten.remainder.Scalar_Tensor_out(self: Scalar, other: Tensor, *, out: 
 ```python
     dtypes = ['int8', 'int32', 'int64','float16', 'bfloat16', 'float32', "bool"]
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
-
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten_remainder_scalar_tensor_out(self, shape, dtype):
         def op_calc(first_element, out):
             torch.ops.aten.remainder.Scalar_Tensor_out(1.5, first_element, out=out)

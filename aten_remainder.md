@@ -49,7 +49,8 @@ torch.ops.aten.remainder(self: Tensor, other: Tensor) -> Tensor
 ```python
     dtypes = ['int32', 'int64','float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
-
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
     def test_aten_remainder(self, shape, dtype):
         def op_calc(first_element, second_element):
             result = torch.ops.aten.remainder(first_element, second_element)

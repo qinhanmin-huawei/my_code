@@ -27,7 +27,7 @@ torch.ops.aten.erf(Tensor self) -> Tensor
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | √     | √      | √      | √      |
 | NPU    | -    | ×    |  -     |  -    |  -    | ×     | -      | √      | √     | √      | √      | √      |
 
->注：对于int8和int32，eager报错不支持。
+>注：aclnn不支持int8，int32。
 
 
 #### 2.2.2 Shape 支持

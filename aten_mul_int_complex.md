@@ -21,7 +21,7 @@ torch.ops.aten.mul.int_complex(int a, complex b) -> complex
 #### 2.2.1 DataType 支持
 |        | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | ------ | ---- | ---- |  ----  |  ---- |  ----  | ----- | ----- | ----- | ----- | ------ | ------ | ------ | --------- | ---------- |
-| GPU    | -    | √    | -      | -     | -      | √     | -     | √     | ×     | ×      | ×      | ×      | √         | ×          |
+| GPU    | -    | √    | -      | -     | -      | √     | -     | √     | ×     | ×      | ×      | ×      | √         | √          |
 | NPU    | -    | √    | -      | -     | -      | √     | -     | √     | ×     | ×      | ×      | ×      | √         | ×          |
 
 #### 2.2.2 Shape 支持
@@ -33,4 +33,19 @@ torch.ops.aten.mul.int_complex(int a, complex b) -> complex
 > 固定标量可能在编译阶段常量折叠，因此暂不做性能和 lowering 验证，仅维护规格。复数与整数输入的支持类型按并集标记。
 
 ### 2.4 使用方法
-> 该纯标量算子暂不编写测试用例。
+```python
+    def test_aten_mul_int_complex(self):
+        def op_calc(anchor, int_value, complex_value):
+            scalar_result = torch.ops.aten.mul.int_complex(int_value, complex_value)
+            return anchor + scalar_result
+
+        def op_calc_1(anchor, int_value, complex_value):
+            scalar_result = torch.ops.aten.mul.int_complex(int_value, complex_value)
+            return anchor + scalar_result + scalar_result
+
+        anchor = torch.zeros((128,), dtype=torch.complex64, device='npu')
+        int_value, complex_value = 3, complex(1.0, 2.0)
+        self.execute_inductor_test((128,), 'complex64', op_calc, op_calc_1,
+                                   anchor, int_value, complex_value,
+                                   op_name='aten.add')
+```

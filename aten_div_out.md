@@ -48,11 +48,6 @@ torch.ops.aten.div.out(self: Tensor, other: Tensor, *, out: Tensor) -> Tensor
 
 
 ```python
-    def _div_result_dtype(dtype):
-        if dtype in ('int8', 'int32', 'int64', 'bool'):
-            return torch.float32
-        return getattr(torch, dtype)
-
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
@@ -60,12 +55,14 @@ torch.ops.aten.div.out(self: Tensor, other: Tensor, *, out: Tensor) -> Tensor
     @parametrize('dtype', dtypes)
     def test_aten_div_out(self, shape, dtype):
         def op_calc(first_element, second_element):
-            out = torch.empty(shape, dtype=_div_result_dtype(dtype), device="npu")
+            out_dtype = first_element.dtype if first_element.is_floating_point() else torch.float32
+            out = torch.zeros_like(first_element, dtype=out_dtype)
             torch.ops.aten.div.out(first_element, second_element, out=out)
             return out
 
         def op_calc_1(first_element, second_element):
-            out = torch.empty(shape, dtype=_div_result_dtype(dtype), device="npu")
+            out_dtype = first_element.dtype if first_element.is_floating_point() else torch.float32
+            out = torch.zeros_like(first_element, dtype=out_dtype)
             torch.ops.aten.div.out(first_element, second_element, out=out)
             return out + out
 

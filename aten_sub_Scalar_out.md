@@ -7,6 +7,7 @@ torch.ops.aten.sub.Scalar_out(self: Tensor, other: Scalar, alpha: Scalar = 1, *,
 ```
 ### 1.2 算子功能
 1、`aten.sub.Scalar_out` 对输入张量 `self` 中的每个元素减去标量 `other` 的对应倍数，即 out = self - alpha × other，默认 `alpha = 1`。
+
 2、  计算结果直接覆盖写入调用方预先指定的 `out` 张量，输出形状与输入一致，dtype 与输入相同。
 
 ## 2. OP 规格
@@ -38,6 +39,7 @@ torch.ops.aten.sub.Scalar_out(self: Tensor, other: Scalar, alpha: Scalar = 1, *,
 
 ### 2.3 特殊限制说明
 > 1、`out` 张量的 dtype/device 需与输入一致、形状需与输入相同，否则 eager 报类型转换/形状错误。
+>
 > 2、标量 `other` 的数值范围需与 tensor dtype 匹配（如 int8），避免溢出。
 
 

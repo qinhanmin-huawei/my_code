@@ -23,13 +23,13 @@ torch.ops.aten.pow.Scalar(Scalar self, Tensor exponent) -> Tensor
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | GPU | - | × | - | - | - | × | - | × | √ | √ | √ | × | √ | √ |
 | NPU | - | × | - | - | - | × | - | × | √ | √ | √ | × | - | - |
-
+> 我们的代码和社区的代码都对int类型单独fallback
 #### 2.2.2 Shape 支持
 `exponent` 支持 1-4 维，输出 shape 与 `exponent` 一致；标量 `self` 不涉及 shape 泛化。
 
 ### 2.3 特殊限制说明
 > 标量底数按输入张量类型提升；`bool` 不支持，NPU 复数类型不纳入本重载考察。
-> 我们的代码和社区的代码都对int类型单独fallback
+
 
 ### 2.4 使用方法
 ```python

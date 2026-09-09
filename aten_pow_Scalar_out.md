@@ -24,13 +24,13 @@ torch.ops.aten.pow.Scalar_out(Scalar self, Tensor exponent, *, Tensor(a!) out) -
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | GPU | - | × | - | - | - | × | - | × | √ | √ | √ | × | √ | √ |
 | NPU | - | × | - | - | - | × | - | × | √ | √ | √ | × | - | - |
-
+> 我们的代码和社区的代码都对int类型单独fallback
 #### 2.2.2 Shape 支持
 `exponent` 和 `out` 支持 1-4 维，`out.shape == exponent.shape`。
 
 ### 2.3 特殊限制说明
 > `out` 的设备、dtype 和 shape 必须与计算结果兼容；`bool` 不支持，NPU 复数类型不纳入本重载考察。
-> 我们的代码和社区的代码都对int类型单独fallback
+
 
 ### 2.4 使用方法
 ```python

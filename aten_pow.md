@@ -23,13 +23,13 @@ torch.ops.aten.pow(Tensor self, Tensor exponent) -> Tensor
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | GPU | - | × | - | - | - | × | - | × | √ | √ | √ | × | √ | √ |
 | NPU | - | × | - | - | - | × | - | × | √ | √ | √ | × | - | - |
-
+> 我们的代码和社区的代码都对int类型单独fallback
 #### 2.2.2 Shape 支持
 `self` 和 `exponent` 支持 1-4 维，形状遵循 PyTorch 广播规则，输出为广播后的形状。
 
 ### 2.3 特殊限制说明
 > `complex128` 在 NPU 上不纳入本重载考察；`bool` 不支持。指数张量必须与底数张量的计算类型兼容。
-> 我们的代码和社区的代码都对int类型单独fallback
+
 ### 2.4 使用方法
 ```python
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']

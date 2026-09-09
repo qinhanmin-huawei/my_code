@@ -27,6 +27,8 @@ torch.ops.aten.erf.out(self: Tensor, *, out: Tensor) -> Tensor
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | √     | √      | √      | √      |
 | NPU    | -    | ×    |  -     |  -    |  -    | ×     | -      | √      | √     | √      | √      | √      |
 
+>注：aclnn不支持int8，int32。
+
 #### 2.2.2 Shape 支持
 
 1、shape维度范围：[1-4]

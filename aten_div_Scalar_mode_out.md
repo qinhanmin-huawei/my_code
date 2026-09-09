@@ -49,7 +49,7 @@ torch.ops.aten.div.Scalar_mode_out(self: Tensor, other: Scalar, *, str? rounding
 
 
 ```python
-    dtypes = ['int8', 'int32', 'int64', 'float16', 'float32', 'bfloat16', 'bool']
+    dtypes = ['int8', 'int32', 'int64', 'float16', 'float32', 'bfloat16']
     shapes = [(32,), (32, 32), (32, 32, 32), (4, 8, 16, 32)]
 
     @parametrize('rounding_mode', ('trunc', 'floor'))

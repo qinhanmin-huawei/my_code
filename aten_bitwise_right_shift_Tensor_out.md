@@ -36,7 +36,7 @@ torch.ops.aten.bitwise_right_shift.Tensor_out(self: Tensor, other: Tensor, *, ou
 | ------ | ---- | ---- |  ----  |  ---- |  ---- | ----- | -----  |  ----- | ----- | ------ | ------ | ------ |
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | √      |
 | NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | ×      |
-
+>注：aclnn不支持bool。
 #### 2.2.2 Shape 支持
 
 1、shape维度范围：[1-4]

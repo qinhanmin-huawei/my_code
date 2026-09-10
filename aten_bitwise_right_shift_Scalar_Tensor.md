@@ -42,7 +42,7 @@ torch.ops.aten.bitwise_right_shift.Scalar_Tensor(self: Scalar, other: Tensor) ->
 | ------ | ---- | ---- |  ----  |  ---- |  ---- | ----- | -----  |  ----- | ----- | ------ | ------ | ------ |
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | √      |
 | NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | ×      |
-
+>注：aclnn不支持bool。
 #### 2.2.2 Shape 支持
 
 1、shape维度范围：[1-4]

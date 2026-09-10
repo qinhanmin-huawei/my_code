@@ -3,7 +3,7 @@
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.bitwise_right_shift.Tensor(self: Tensor, other: Tensor) -> Tensor
+torch.ops.aten.bitwise_right_shift(self: Tensor, other: Tensor) -> Tensor
 ```
 ### 1.2 算子功能
 `aten.bitwise_right_shift` 计算输入张量 `self` 中每个元素**按位右移** `other` 位，并返回一个新的张量。
@@ -30,7 +30,7 @@ torch.ops.aten.bitwise_right_shift.Tensor(self: Tensor, other: Tensor) -> Tensor
 |        |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 |  int64 | fp16  | fp32   | bf16   | bool   |
 | ------ | ---- | ---- |  ----  |  ---- |  ---- | ----- | -----  |  ----- | ----- | ------ | ------ | ------ |
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | √      |
-| NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | √      |
+| NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | ×      |
 
 #### 2.2.2 Shape 支持
 
@@ -46,7 +46,7 @@ torch.ops.aten.bitwise_right_shift.Tensor(self: Tensor, other: Tensor) -> Tensor
 
 
 ```python
-    dtypes = ['int8', 'int32', 'int64', "bool"]
+    dtypes = ['int8', 'int32', 'int64']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
     @parametrize('shape', shapes)

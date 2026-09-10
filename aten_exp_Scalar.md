@@ -21,9 +21,10 @@ torch.ops.aten.exp.Scalar(Scalar a) -> Scalar
 
 #### 2.2.1 DataType 支持
 
-| 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
+|        | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `a` | √ | √ | √ | √ | √ | √ | - | - | - |
+| GPU | √ | √ | √ | √ | √ | √ | - | - | - |
+| NPU | √ | √ | √ | √ | √ | √ | - | - | - |
 
 > 纯标量重载：`a` 固定为 Scalar（int/float，不含 bool），返回 Scalar（int 输入按浮点计算），与 tensor dtype/shape 无关，不参与 tensor 的 dtype 判定。
 

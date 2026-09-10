@@ -22,10 +22,10 @@ torch.ops.aten.div.complex(complex a, complex b) -> complex
 
 #### 2.2.1 DataType 支持
 
-| 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
+|        | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `a` | - | - | - | - | - | - | - | √ | √ |
-| `b` | - | - | - | - | - | - | - | √ | √ |
+| GPU | - | - | - | - | - | - | - | √ | √ |
+| NPU | - | - | - | - | - | - | - | √ | √ |
 
 > 纯标量重载：`a`/`b` 固定为 complex，返回 complex，与 tensor dtype/shape 无关，不参与 tensor 的 dtype 判定。
 

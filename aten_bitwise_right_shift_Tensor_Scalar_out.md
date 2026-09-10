@@ -33,8 +33,8 @@ torch.ops.aten.bitwise_right_shift.Tensor_Scalar_out(self: Tensor, other: Scalar
 |        |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 |  int64 | fp16  | fp32   | bf16   | bool   |
 | ------ | ---- | ---- |  ----  |  ---- |  ---- | ----- | -----  |  ----- | ----- | ------ | ------ | ------ |
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | √      |
-| NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | √      |
-
+| NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | ×     | ×      | ×      | ×      |
+>注：aclnn不支持bool。
 #### 2.2.2 Shape 支持
 
 1、shape维度范围：[1-4]
@@ -49,7 +49,7 @@ torch.ops.aten.bitwise_right_shift.Tensor_Scalar_out(self: Tensor, other: Scalar
 
 
 ```python
-    dtypes = ['int8', 'int32', 'int64', "bool"]
+    dtypes = ['int8', 'int32', 'int64']
     shapes = [(128,), (128, 128), (128, 1024, 4096), (4, 8, 16, 32)]
 
     @parametrize('shape', shapes)

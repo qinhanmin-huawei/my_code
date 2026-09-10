@@ -22,10 +22,10 @@ torch.ops.aten.div.default(Scalar a, Scalar b) -> float
 
 #### 2.2.1 DataType 支持
 
-| 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
+|        | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `a` | √ | √ | √ | √ | √ | √ | - | - | - |
-| `b` | √ | √ | √ | √ | √ | √ | - | - | - |
+| GPU | √ | √ | √ | √ | √ | √ | - | - | - |
+| NPU | √ | √ | √ | √ | √ | √ | - | - | - |
 
 #### 2.2.2 Shape 支持
 

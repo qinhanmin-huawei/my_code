@@ -27,9 +27,10 @@ torch.ops.aten.sqrt.Scalar(Scalar a) -> Scalar
 
 下表按构造输入标量的来源 dtype 列示，实际参数为 Python 标量。
 
-| 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `a` | √ | √ | √ | √ | √ | √ | × | - | - |
+| 设备 | 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GPU | `a` | √ | √ | √ | √ | √ | √ | × | - | - |
+| NPU | `a` | √ | √ | √ | √ | √ | √ | × | - | - |
 
 #### 2.2.2 Shape 支持
 
@@ -43,8 +44,23 @@ torch.ops.aten.sqrt.Scalar(Scalar a) -> Scalar
 
 ### 2.4 使用方法
 
-```python
-import torch
+`_generate_scalar` 基于 `_generate_random_scalar` 生成正数 Python 标量；`_scalar_anchor_shape = (128,)`。
 
-y = torch.ops.aten.sqrt.Scalar(4.0)  # 2.0
+```python
+    dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
+
+    @parametrize('dtype', dtypes)
+    def test_aten_sqrt_Scalar(self, dtype):
+        def op_calc(a, tensor):
+            y = torch.ops.aten.sqrt.Scalar(a)
+            return tensor + y
+
+        def op_calc_1(a, tensor):
+            y = torch.ops.aten.sqrt.Scalar(a)
+            y = y + y
+            return tensor + y
+
+        a = self._generate_scalar(dtype)
+        tensor = torch.zeros(self._scalar_anchor_shape, dtype=torch.float32, device='npu')
+        self.execute_inductor_test(self._scalar_anchor_shape, dtype, op_calc, op_calc_1, a, tensor)
 ```

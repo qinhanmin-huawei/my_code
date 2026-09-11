@@ -31,7 +31,7 @@ torch.ops.aten.ceil.out(self: Tensor, *, out: Tensor(a!)) -> Tensor(a!)
 | GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 
-整数型ceil会变为copy操作。
+注:aclnnceil不支持int类型，eager会报错
 #### 2.2.2 Shape 支持
 
 覆盖 1～4 维。shape 遍历值：[(32,), (32, 32), (32, 32, 32), (4, 8, 16, 32)]。

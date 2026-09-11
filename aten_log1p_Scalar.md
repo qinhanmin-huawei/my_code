@@ -27,9 +27,10 @@ torch.ops.aten.log1p.Scalar(Scalar a) -> Scalar
 
 下表按构造输入标量的来源 dtype 列示，实际参数为 Python 标量。
 
-| 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `a` | √ | √ | √ | √ | √ | √ | × | × | × |
+| 设备 | 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GPU | `a` | √ | √ | √ | √ | √ | √ | × | × | × |
+| NPU | `a` | √ | √ | √ | √ | √ | √ | × | × | × |
 
 #### 2.2.2 Shape 支持
 

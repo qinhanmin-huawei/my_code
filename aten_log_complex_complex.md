@@ -28,10 +28,10 @@ torch.ops.aten.log.complex_complex(complex a, complex b) -> complex
 
 下表按构造输入标量的来源 dtype 列示，实际参数为 Python 标量。
 
-| 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `a` | - | - | - | - | - | - | × | √ | √ |
-| `b` | - | - | - | - | - | - | × | √ | √ |
+| 设备 | 参数 | int8 | int32 | int64 | fp16 | fp32 | bf16 | bool | complex64 | complex128 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GPU | `a`、`b` | - | - | - | - | - | - | × | √ | √ |
+| NPU | `a`、`b` | - | - | - | - | - | - | × | √ | √ |
 
 #### 2.2.2 Shape 支持
 

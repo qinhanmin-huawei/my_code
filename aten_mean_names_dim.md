@@ -3,7 +3,7 @@
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.mean.names_dim(Tensor self, Dimname[1]? dim, bool keepdim=False) -> Tensor
+torch.ops.aten.mean.names_dim(Tensor self, str[1] dim, bool keepdim=False, *, ScalarType? dtype=None) -> Tensor
 ```
 
 ### 1.2 算子功能
@@ -14,8 +14,9 @@ torch.ops.aten.mean.names_dim(Tensor self, Dimname[1]? dim, bool keepdim=False) 
 | 参数名 | 类型 | 说明 |
 | --- | --- | --- |
 | `self` | `Tensor` | 带维度名称的输入 Tensor |
-| `dim` | `Dimname[]?` | 待归约的命名维度 |
+| `dim` | `str[1]` | 待归约的命名维度名称 |
 | `keepdim` | `bool` | 是否保留归约维度 |
+| `dtype` | `ScalarType?` | 可选的计算和输出 dtype |
 | 返回值 | `Tensor` | 按命名维度归约后的结果 |
 
 ### 2.2 支持规格
@@ -27,9 +28,8 @@ torch.ops.aten.mean.names_dim(Tensor self, Dimname[1]? dim, bool keepdim=False) 
 
 #### 2.2.2 Shape 支持
 输入支持 1-4 维；输出 shape 按命名维度归约规则确定。
-
 ### 2.3 特殊限制说明
-> 输入必须携带与 `dim` 匹配的 named tensor 维度。由于现有测试框架会对参数执行 `deepcopy`，而 named Tensor 暂不支持该操作，用例在测试方法中预先构造 named Tensor，并通过闭包传入算子；`op_calc` 不修改输入。NPU 复数类型不纳入本重载考察。
+> 输入必须携带与 `dim` 匹配的 named tensor 维度。由于现有测试框架会对参数执行 `deepcopy`，而 named Tensor 暂不支持该操作，用例在测试方法中预先构造 named Tensor，并通过闭包传入算子；`op_calc` 不修改输入。当前 NPU TorchScript/eager 对 named Tensor 仍报 `NYI`，因此现有 Inductor 框架无法完成该重载的 lowering 验证。NPU 复数类型不纳入本重载考察。
 
 ### 2.4 使用方法
 ```python

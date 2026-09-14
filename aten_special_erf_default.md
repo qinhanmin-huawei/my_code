@@ -28,9 +28,9 @@ torch.ops.aten.special_erf.default(Tensor self) -> Tensor
 | | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | × |
-| NPU | - | - | - | - | - | - | - | √ | √ | √ | √ | × |
+| NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | × |
 
-> NPU 的 int8/int32 暂记为 `-`：当前环境下，Eager 路径调用的 `aclnnErf` 不支持这两种输入类型；Inductor 最小用例可执行。
+> NPU 的 int8/int32 暂记为 `√`：当前环境下，Eager 路径调用的 `aclnnErf` 不支持这两种输入类型；Inductor 最小用例可执行。
 
 #### 2.2.2 Shape 支持
 

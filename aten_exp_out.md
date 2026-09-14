@@ -26,7 +26,7 @@ torch.ops.aten.exp.out(self: Tensor, *, out: Tensor) -> Tensor
 |        |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 |  int64 | fp16  | fp32   | bf16   | bool   |
 | ------ | ---- | ---- |  ----  |  ---- |  ---- | ----- | -----  |  ----- | ----- | ------ | ------ | ------ |
 | GPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | √     | √      | √      | √      |
-| NPU    | -    | ×    |  -     |  -    |  -    | ×     | -      | √      | √     | √      | √      | √      |
+| NPU    | -    | √    |  -     |  -    |  -    | √     | -      | √      | √     | √      | √      | √      |
 >注：aclnn不支持int8，int32。
 
 #### 2.2.2 Shape 支持

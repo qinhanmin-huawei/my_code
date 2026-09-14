@@ -3,7 +3,15 @@
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.avg_pool2d(self: Tensor, kernel_size: int[2], stride: int[2] = [], padding: int[2] = 0, ceil_mode: bool = False, count_include_pad: bool = True, divisor_override: int? = None) -> Tensor
+torch.ops.aten.avg_pool2d(
+    self: Tensor,
+    kernel_size: int[2],
+    stride: int[2] = [],
+    padding: int[2] = 0,
+    ceil_mode: bool = False,
+    count_include_pad: bool = True,
+    divisor_override: int? = None
+) -> Tensor
 ```
 ### 1.2 算子功能
 `aten.avg_pool2d` 的核心功能是对输入张量 `self` 执行 2D 平均池化：使用大小为 `kernel_size` 的滑动窗口按 `stride` 步长在空间维度 `H`、`W` 上滑动，对每个窗口内的元素求平均值作为输出。`padding` 用于在空间边界补零，`ceil_mode` 决定输出尺寸的取整方式，`count_include_pad` 决定求均值时是否将补零元素计入分母，`divisor_override` 可显式指定除法分母。

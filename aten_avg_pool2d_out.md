@@ -3,7 +3,17 @@
 ## 1. OP 概述
 ### 1.1 算子原型
 ```
-torch.ops.aten.avg_pool2d.out(self: Tensor, kernel_size: int[2], stride: int[2] = [], padding: int[2] = 0, ceil_mode: bool = False, count_include_pad: bool = True, divisor_override: int? = None, *, out: Tensor) -> Tensor
+torch.ops.aten.avg_pool2d.out(
+    self: Tensor,
+    kernel_size: int[2],
+    stride: int[2] = [],
+    padding: int[2] = 0,
+    ceil_mode: bool = False,
+    count_include_pad: bool = True,
+    divisor_override: int? = None,
+    *,
+    out: Tensor
+) -> Tensor
 ```
 ### 1.2 算子功能
 `aten.avg_pool2d.out` 是 `aten.avg_pool2d` 的 out 变体（out variant），其功能与 `aten.avg_pool2d` 一致：对输入张量 `self` 执行 2D 平均池化，并将计算结果直接覆盖写入到预先指定的 `out` 张量中。

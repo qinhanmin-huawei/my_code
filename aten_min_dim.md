@@ -26,7 +26,7 @@ torch.ops.aten.min.dim(Tensor self, int dim, bool keepdim=False) -> (Tensor valu
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | √ | - | - |
 
 `indices` 输出 dtype 固定为 `int64`。
-
+aclnn不支持int8，仅与cpu做精度对比
 #### 2.2.2 Shape 支持
 `values` 和 `indices` 具有相同 shape；`keepdim=False` 删除 `dim`，`keepdim=True` 将该维度设为 1。
 

@@ -34,7 +34,6 @@ torch.ops.aten.div.Scalar_mode_out(self: Tensor, other: Scalar, *, str? rounding
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 
 
-
 #### 2.2.2 Shape 支持
 
 1. 本测试覆盖的 shape 维度范围为 `[1, 4]`。
@@ -43,7 +42,7 @@ torch.ops.aten.div.Scalar_mode_out(self: Tensor, other: Scalar, *, str? rounding
 
 ### 2.3 特殊限制说明
 
-`out` 必须与输入位于同一设备并能接收结果；测试使用非零除数，并覆盖 `trunc` 与 `floor`。
+`out` 必须与输入位于同一设备并能接收结果；测试使用非零除数，并覆盖 `trunc` 与 `floor`。由于社区2.10版会将除法转化为乘倒数，而当除数无法除尽时，会变为近似值，导致高精度计算时会舍入错误，社区版在2.12版本修复了该问题，此处不做修改，与社区版保持一致。
 
 ### 2.4 使用方法
 

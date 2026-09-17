@@ -8,7 +8,7 @@ torch.ops.aten.as_strided_scatter.out(
     Tensor src, 
     SymInt[] size, 
     SymInt[] stride, 
-    int? storage_offset=None, 
+    SymInt? storage_offset=None, 
     *, 
     Tensor(a!) out
 ) -> Tensor(a!)
@@ -30,7 +30,7 @@ torch.ops.aten.as_strided_scatter.out(
 | `src` | `Tensor` | 要散布进去的数据张量，元素数需等于视图大小 `numel(size)` |
 | `size` | `SymInt[]` | 视图形状 |
 | `stride` | `SymInt[]` | 视图步长，需与 `size` 匹配且不越出 `self` 存储 |
-| `storage_offset` | `int?` | 视图在存储中的起始偏移量，默认 `0` |
+| `storage_offset` | `SymInt?` | 视图在存储中的起始偏移量，默认 `None` |
 | `out` | `Tensor(a!)` | 输出张量（原地写入），形状与 `self` 相同 |
 | 返回值 | `Tensor(a!)` | 即 `out`，散布后的结果 |
 
@@ -52,7 +52,7 @@ torch.ops.aten.as_strided_scatter.out(
 ### 2.3 特殊限制说明
 
 1. 视图范围由 `size/stride/storage_offset` 决定，跨度不能超出 `self` 的存储空间；`src.numel()` 需与 `numel(size)` 一致。
-2. 当前测试中 `new_size = (tensor.numel()//64, 64)`、`new_stride = (64, 1)`，即要求 `tensor.numel()` 可被 64 整除（视图恰好占满整个张量）。
+2. 当前测试中 `new_size = (tensor.numel()//64, 64)`、`new_stride = (64, 1)`，即要求 `tensor.numel()` 可被 64 整除（视图恰好占满整个张量）。当 numel < 64 时会得到 (0, 64)，变成空 scatter。
 
 ### 2.4 使用方法
 
@@ -62,16 +62,29 @@ torch.ops.aten.as_strided_scatter.out(
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
     @parametrize('dtype', TestUtils._test_dtypes)
     def test_aten_as_strided_scatter_out(self, shape, dtype):
-        def op_calc(tensor, src_tensor, new_size, new_stride, out_t):
-            out = torch.ops.aten.as_strided_scatter.out(tensor, src_tensor, new_size, new_stride, storage_offset=0, out = out_t)
+        def op_calc(tensor, src, size, stride, out_tensor):
+            out = torch.ops.aten.as_strided_scatter.out(tensor, src, size, stride,storage_offset=0,out=out_tensor,)
             return out
-        def op_calc_1(tensor, src_tensor, new_size, new_stride, out_t):
-            out = torch.ops.aten.as_strided_scatter.out(tensor, src_tensor, new_size, new_stride, storage_offset=0, out = out_t)
-            return out + out
+
+        def op_calc_1(tensor, src, size, stride, out_tensor):
+            result = torch.ops.aten.as_strided_scatter.out(
+                tensor, src, size, stride,
+                storage_offset=0,
+                out=out_tensor,
+            )
+            return result + result
+
         tensor = self._generate_tensor(shape, dtype)
-        new_size = (tensor.numel()//64, 64)
+
+        new_size = (tensor.numel() // 64, 64)
         new_stride = (64, 1)
         src_tensor = self._generate_tensor(new_size, dtype)
-        out_t = torch.zeros(new_size, dtype=eval("torch." + dtype), device="npu")
-        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensor, src_tensor, new_size, new_stride, out_t)
+
+        # 输出 shape 与 self 相同。
+        out_tensor = torch.empty_like(tensor)
+
+        self.execute_inductor_test(
+            shape, dtype, op_calc, op_calc_1,
+            tensor, src_tensor, new_size, new_stride, out_tensor,
+        )
 ```

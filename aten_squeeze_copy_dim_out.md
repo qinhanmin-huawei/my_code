@@ -49,27 +49,29 @@ torch.ops.aten.squeeze_copy.dim_out(
 ```python
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32', 'bool']
     shapes = [(16,), (16, 32), (16, 32, 64), (16, 32, 64, 128)]
-    dim_cases = [(shape, len(shape) // 2) for shape in shapes]
+    dim_cases = [dict(shape=shape, dim=len(shape) // 2) for shape in shapes]
 
-    # Derive extras from one framework shape per rank.
     shape_by_rank = {}
     for shape in shapes:
         shape_by_rank.setdefault(len(shape), tuple(shape))
 
     for rank, shape in shape_by_rank.items():
         if rank == 1:
-            dim_cases.append(((1,), 0))
+            dim_cases.append(dict(shape=(1,), dim=0))
         elif rank == 3:
             dim_cases.extend([
-                ((shape[0], 1, shape[2]), 1),  # Middle axis.
-                ((shape[0], shape[1], 1), -1),  # Negative axis.
+                dict(shape=(shape[0], 1, shape[2]), dim=1),
+                dict(shape=(shape[0], shape[1], 1), dim=-1),
             ])
-            if shape[1] != 1:  # A selected non-singleton axis stays unchanged.
-                dim_cases.append(((1, shape[1], 1), 1))
+            if shape[1] != 1:
+                dim_cases.append(dict(shape=(1, shape[1], 1), dim=1))
 
-    @parametrize('shape,dim', dim_cases)
+    @parametrize('case', dim_cases)
     @parametrize('dtype', dtypes)
-    def test_aten_squeeze_copy_dim_out(self, shape, dtype, dim):
+    def test_aten_squeeze_copy_dim_out(self, case, dtype):
+        shape = case['shape']
+        dim = case['dim']
+
         def op_calc(tensor, dim, out):
             y = torch.ops.aten.squeeze_copy.dim_out(tensor, dim, out=out)
             return y

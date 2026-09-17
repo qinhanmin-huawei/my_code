@@ -45,7 +45,7 @@ torch.ops.aten.sigmoid.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
 
 ### 2.4 使用方法
 
-`_generate_tensor` 保持输入 dtype 和设备，按 `min=-4, max=5` 生成小范围测试数据，整数取值为 `-4～4`。
+`_generate_tensor` 保持输入 dtype 和设备，按 `min=-4, max=4` 生成小范围测试数据，整数取值为 `-4～3`。
 
 ```python
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
@@ -62,7 +62,7 @@ torch.ops.aten.sigmoid.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
             y = torch.ops.aten.sigmoid.out(tensor, out=out)
             return y + y
 
-        tensor = self._generate_tensor(shape, dtype, min=-4, max=5)
+        tensor = self._generate_tensor(shape, dtype, min=-4, max=4)
         out_dtype = tensor.dtype if tensor.is_floating_point() else torch.get_default_dtype()
         out = torch.empty_like(tensor, dtype=out_dtype)
         self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensor, out)

@@ -38,8 +38,9 @@ torch.ops.aten.avg_pool2d(
 | |uint8 | int8 | uint16 | int16 | uint32| int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- |  ---  |  --- |  --- | --- |  ---  |  --- | --- | --- | --- | --- |
 | GPU | - | × | - | - | - | × | - | × | √ | √ | √ | × |
-| NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | × |
+| NPU | - | × | - | - | - | × | - | × | √ | √ | √ | × |
 
+> 注：社区不支持 `int8`、`int32` 和 `int64` 类型，当前 CPU 和 NPU 的 eager 模式同样不支持这些类型。
 #### 2.2.2 Shape 支持
 
 1、shape维度范围：[3-4]（3D `(C, H, W)` 或 4D `(N, C, H, W)`，3D 时按单样本 N=1 处理）
@@ -53,7 +54,7 @@ torch.ops.aten.avg_pool2d(
 ### 2.4 使用方法
 
 ```python
-    dtypes = ['float16', 'bfloat16', 'float32', 'int8', 'int32', 'int64']
+    dtypes = ['float16', 'bfloat16', 'float32']
     shapes = [(128, 1024, 4096), (4, 8, 16, 32)]
 
     @parametrize('shape', shapes)

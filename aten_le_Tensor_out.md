@@ -43,7 +43,7 @@ torch.ops.aten.le.Tensor_out(Tensor self, Tensor other, *, Tensor(a!) out) -> Te
 
 ### 2.3 特殊限制说明
 
-> 无
+> `out` 必须按 `torch.bool` 分配，否则 eager 报 `Expected out tensor to have dtype bool, ...`；比较算子没有“整数输入用 float32 out”的通则。
 
 ### 2.4 使用方法
 

@@ -52,7 +52,6 @@ eager模式在npu上和cpu上均无法运行，该算子只支持在npu上下发
     shapes = [(1, 128, 128)]
     dtypes = []
 
-    @unittest.skip('该算子的 GPU 正向输入类型超出本次七种 dtype 范围，NPU 输入组合尚未确认')
     @parametrize('shape', shapes)
     @parametrize('dtype', dtypes)
     def test_aten__scaled_grouped_mm_default(self, shape, dtype):

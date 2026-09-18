@@ -43,7 +43,7 @@ torch.ops.aten.le.Scalar_out(Tensor self, Scalar other, *, Tensor(a!) out) -> Te
 
 ### 2.3 特殊限制说明
 
-> `other` 是泛化 `Scalar`，比较前按 `self` 的 dtype 装箱。
+> `out` 必须按 `torch.bool` 分配，否则 eager 报 `Expected out tensor to have dtype bool, ...`；`other` 是泛化 `Scalar`，比较前按 `self` 的 dtype 装箱。
 
 ### 2.4 使用方法
 

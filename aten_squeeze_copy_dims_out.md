@@ -49,26 +49,28 @@ torch.ops.aten.squeeze_copy.dims_out(
 ```python
     dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32', 'bool']
     shapes = [(16,), (16, 32), (16, 32, 64), (16, 32, 64, 128)]
-    dims_cases = [(shape, [0] if len(shape) == 1 else [0, -1]) for shape in shapes]
+    dims_cases = [dict(shape=shape, dims=[0] if len(shape) == 1 else [0, -1]) for shape in shapes]
 
-    # Derive extras from one framework shape per rank.
     shape_by_rank = {}
     for shape in shapes:
         shape_by_rank.setdefault(len(shape), tuple(shape))
 
     for rank, shape in shape_by_rank.items():
         if rank == 2:
-            dims_cases.append(((1, 1), [0, 1]))
+            dims_cases.append(dict(shape=(1, 1), dims=[0, 1]))
         elif rank == 3:
-            dims_cases.append(((1, shape[1], 1), []))
+            dims_cases.append(dict(shape=(1, shape[1], 1), dims=[]))
         elif rank == 4:
-            dims_cases.append(((shape[0], 1, shape[2], 1), [3, 1]))
+            dims_cases.append(dict(shape=(shape[0], 1, shape[2], 1), dims=[3, 1]))
             if shape[1] != 1:
-                dims_cases.append(((1, shape[1], 1, shape[3]), [-2, 1]))
+                dims_cases.append(dict(shape=(1, shape[1], 1, shape[3]), dims=[-2, 1]))
 
-    @parametrize('shape,dims', dims_cases)
+    @parametrize('case', dims_cases)
     @parametrize('dtype', dtypes)
-    def test_aten_squeeze_copy_dims_out(self, shape, dtype, dims):
+    def test_aten_squeeze_copy_dims_out(self, case, dtype):
+        shape = case['shape']
+        dims = case['dims']
+
         def op_calc(tensor, dims, out):
             y = torch.ops.aten.squeeze_copy.dims_out(tensor, dims, out=out)
             return y

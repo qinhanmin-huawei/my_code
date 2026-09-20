@@ -30,7 +30,7 @@ torch.ops.aten.mean.dim(Tensor self, int[1]? dim, bool keepdim=False, *, ScalarT
 输入支持 1-4 维；输出 shape 按 `dim` 删除对应维度，或在 `keepdim=True` 时将其置为 1。
 
 ### 2.3 特殊限制说明
-> `dim` 使用整数维度索引；输入应为浮点 Tensor。NPU 复数类型不纳入本重载考察。
+> `dim` 使用整数维度索引；输入应为浮点 Tensor。浮点归约在 eager、CPU 和 Inductor 中可能采用不同的累加顺序，为避免通用随机生成器约 `[-2000, 2000]` 的大幅值输入放大舍入误差，本规格用例将输入限制在 `[-1.0, 1.0]`。NPU 复数类型不纳入本重载考察。
 
 ### 2.4 使用方法
 ```python
@@ -47,7 +47,6 @@ torch.ops.aten.mean.dim(Tensor self, int[1]? dim, bool keepdim=False, *, ScalarT
             y = torch.ops.aten.mean.dim(tensor, [0], False)
             return y + y
 
-        tensor = self._generate_tensor(shape, dtype)
-        self.execute_inductor_test(shape[1:] if len(shape) > 1 else (), dtype,
-                                   op_calc, op_calc_1, tensor)
+        tensor = self._generate_tensor(shape, dtype,min=-1.0,max=1.0)
+        self.execute_inductor_test(shape, dtype,op_calc, op_calc_1, tensor)
 ```

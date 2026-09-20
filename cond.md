@@ -29,8 +29,8 @@ torch.ops.higher_order.cond(pred, true_fn, false_fn, operands) -> Tensor
 
 | 设备 | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | √ |
-| NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | √ |
+| GPU | - | - | - | - | - | - | - | - | - | - | - | √ |
+| NPU | - | - | - | - | - | - | - | - | - | - | - | √ |
 
 #### 2.2.2 Shape 支持
 
@@ -39,13 +39,13 @@ torch.ops.higher_order.cond(pred, true_fn, false_fn, operands) -> Tensor
 
 ### 2.3 特殊限制说明
 
-两个分支保持相同输出 shape 和 dtype，且不修改输入。GPU/NPU dtype 取决于分支中的算子，本例为加法与 clone。
+GPU/NPU dtype 取决于分支中的算子，本例为加法与 clone。dtypes只用于构造计算的数据类型，不约束算子输入的condition。
 
 ### 2.4 使用方法
 
 ```python
     shapes = [(4,), (4, 8), (4, 8, 16), (4, 8, 16, 32)]
-    dtypes = ['int8', 'int32', 'int64', 'bool', 'float16', 'bfloat16', 'float32']
+    dtypes = ['float32']
     predicates = [False, True]
 
     @parametrize('shape', shapes)

@@ -1,0 +1,66 @@
+# aten.argmin.out
+
+## 1. OP 概述
+
+### 1.1 算子原型
+
+```text
+torch.ops.aten.argmin.out(self: Tensor, dim: int?=None, keepdim: bool=False, *, out: Tensor(a!)) -> Tensor(a!)
+```
+
+### 1.2 算子功能
+
+返回指定维度上最小值元素的索引，并将结果写入 `out`。
+
+## 2. OP 规格
+
+### 2.1 参数说明
+
+| 参数名 | 类型 | 说明 |
+| --- | --- | --- |
+| `self` | `Tensor` | 输入张量。 |
+| `dim` | `int?` | 可选的归约维度；为 `None` 时对整个输入张量进行归约。 |
+| `keepdim` | `bool` | 是否保留归约维度。 |
+| `out` | `Tensor` | 承接索引结果的 int64 可写张量。 |
+| `返回值` | `Tensor` | 与 `out` 别名相同的结果。 |
+
+### 2.2 支持规格
+
+#### 2.2.1 DataType 支持
+
+| 设备 | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
+| NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
+
+
+#### 2.2.2 Shape 支持
+
+1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
+2. `dim` 固定为 `-1`，`keepdim` 固定为 `True`；`out` dtype 固定为 `int64`；输入到 `out` shape：`(4,) -> (1,)`、`(4, 8) -> (4, 1)`、`(4, 8, 16) -> (4, 8, 1)`、`(4, 8, 16, 32) -> (4, 8, 16, 1)`。
+
+### 2.3 特殊限制说明
+
+归约维度长度必须大于零。
+
+### 2.4 使用方法
+
+```python
+    shapes = [(4,), (4, 8), (4, 8, 16), (4, 8, 16, 32)]
+    dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32']
+
+    @parametrize('shape', shapes)
+    @parametrize('dtype', dtypes)
+    def test_aten_argmin_out(self, shape, dtype):
+        def op_calc(first_element, out):
+            return torch.ops.aten.argmin.out(first_element, -1, True, out=out)
+
+        def op_calc_1(first_element, out):
+            result = torch.ops.aten.argmin.out(first_element, -1, True, out=out)
+            return result + result
+
+        tensor1 = self._generate_tensor(shape, dtype, min=-8, max=8)
+        output_shape = tuple(shape[:-1]) + (1,)
+        out = self._generate_tensor(output_shape, 'int64', min=0, max=1)
+        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensor1, out)
+```

@@ -40,7 +40,7 @@ torch.ops.aten._foreach_sub.List(self: Tensor[], other: Tensor[], *, alpha: Scal
 
 ### 2.3 特殊限制说明
 
-上游pytorch bug，编译时无法传递alpha，导致 alpha 参数丢失。链接：https://github.com/pytorch/pytorch/pull/184421。
+上游pytorch bug，编译时无法传递alpha，导致 alpha 参数丢失。链接：https://github.com/pytorch/pytorch/pull/184421。所以当alpha输入不为1时会精度错误。
 
 ### 2.4 使用方法
 

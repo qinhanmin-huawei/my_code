@@ -53,7 +53,7 @@ int8、int32、int64 和 bool 输入社区不支持，当前 CPU Eager 和 NPU E
 ### 2.4 使用方法
 
 ```python
-    dtypes = ['int8', 'int32', 'int64', 'float16', 'bfloat16', 'float32', 'bool']
+    dtypes = ['float16', 'bfloat16', 'float32']
     shapes = [(16,), (16, 32), (16, 32, 64), (16, 32, 64, 128)]
     keepdims = [False, True]
     unbiaseds = [False, True]

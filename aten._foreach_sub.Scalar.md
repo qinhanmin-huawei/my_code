@@ -31,7 +31,7 @@ torch.ops.aten._foreach_sub.Scalar(self: Tensor[], scalar: Scalar) -> Tensor[]
 | GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 
-
+注：不支持int8和int64的npu的eager。
 #### 2.2.2 Shape 支持
 
 1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。

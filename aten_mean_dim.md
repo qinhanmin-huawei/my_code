@@ -30,7 +30,9 @@ torch.ops.aten.mean.dim(Tensor self, int[1]? dim, bool keepdim=False, *, ScalarT
 输入支持 1-4 维；输出 shape 按 `dim` 删除对应维度，或在 `keepdim=True` 时将其置为 1。
 
 ### 2.3 特殊限制说明
-> `dim` 使用整数维度索引；输入应为浮点 Tensor。浮点归约在 eager、CPU 和 Inductor 中可能采用不同的累加顺序，为避免通用随机生成器约 `[-2000, 2000]` 的大幅值输入放大舍入误差，本规格用例将输入限制在 `[-1.0, 1.0]`。NPU 复数类型不纳入本重载考察。
+> `dim` 使用整数维度索引；输入应为浮点 Tensor。
+
+> 浮点归约在 CPU、GPU/NPU eager 和 GPU/NPU Inductor 中可能采用不同的并行累加顺序或归约实现，因此即使算子语义正确，结果也可能出现微小数值差异。该现象在 GPU 和 NPU 均可出现，属于浮点归约的正常误差特性，不要求 Inductor 结果必须比 eager 结果更接近 CPU，暂不作为后端缺陷修复。测试使用框架默认数据生成方式，并使用合理的 `rtol/atol` 进行比较。NPU 复数类型不纳入本重载考察。
 
 ### 2.4 使用方法
 ```python

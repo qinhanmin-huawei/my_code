@@ -40,8 +40,7 @@ torch.ops.aten._scaled_grouped_mm.default(Tensor self, Tensor mat2, Tensor scale
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度固定为 `3`。
-2. 测试 shape：`(1, 128, 128)`。
+`self` 和 `mat2` 固定为 3 维 Tensor。
 
 ### 2.3 特殊限制说明
 

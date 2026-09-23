@@ -33,8 +33,7 @@ torch.ops.aten._assert_async.msg(Tensor self, str assert_msg) -> ()
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度固定为 `0`。
-2. 测试 shape：`()`。
+`self` 固定为 0 维 Tensor。
 
 ### 2.3 特殊限制说明
 

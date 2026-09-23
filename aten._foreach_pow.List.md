@@ -33,8 +33,7 @@ torch.ops.aten._foreach_pow.List(self: Tensor[], exponent: Tensor[]) -> Tensor[]
 
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. 两个输入列表长度均固定为 `2`，对应元素使用相同的遍历 shape；底数和指数范围固定为 `[1, 4)`。
+输入列表中的 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

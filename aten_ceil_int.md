@@ -33,7 +33,7 @@ torch.ops.aten.ceil.int(a: int) -> int
 整数型ceil会变为copy操作。
 #### 2.2.2 Shape 支持
 
-标量输入不涉及 Tensor shape；辅助 Tensor 的 shape 固定为 (64,)。
+标量输入不涉及 Tensor shape。
 
 ### 2.3 特殊限制说明
 

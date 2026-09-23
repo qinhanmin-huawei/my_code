@@ -36,8 +36,7 @@ torch.ops.aten.addmm(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Sc
 
 #### 2.2.2 Shape 支持
 
-1. 输入参数 `mat1` 和 `mat2` 必须为二维 Tensor；`self` 必须可广播到二维矩阵乘输出。
-2. 测试 shape：`(128, 128)`。
+`mat1` 和 `mat2` 固定为 2 维 Tensor；`self` 支持 0～2 维 Tensor。
 
 ### 2.3 特殊限制说明
 

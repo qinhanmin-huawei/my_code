@@ -36,8 +36,7 @@ torch.ops.aten.amin.out(self: Tensor, dim: int[1]=[], keepdim: bool=False, *, ou
 
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. `dim` 固定为 `(-1,)`，`keepdim` 固定为 `True`；`out` dtype 与输入相同；输入到 `out` shape：`(4,) -> (1,)`、`(4, 8) -> (4, 1)`、`(4, 8, 16) -> (4, 8, 1)`、`(4, 8, 16, 32) -> (4, 8, 16, 1)`。
+输入 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

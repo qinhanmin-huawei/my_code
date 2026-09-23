@@ -36,8 +36,7 @@ torch.ops.higher_order.flex_attention(query, key, value, score_mod, block_mask, 
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度固定为 `4`。
-2. 测试 shape：`(4, 8, 16, 32)`。
+`query`、`key` 和 `value` 固定为 4 维 Tensor。
 
 ### 2.3 特殊限制说明
 

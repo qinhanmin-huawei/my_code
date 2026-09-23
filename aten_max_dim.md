@@ -35,8 +35,7 @@ torch.ops.aten.max.dim(Tensor self, int dim, bool keepdim=False) -> (Tensor valu
 注：eager模式下aclnnMaxDim不支持int8类型。
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度范围为 `[1, 4]`。
-2. 测试 shape：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
+输入 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

@@ -35,8 +35,7 @@ torch.ops.aten.mm.dtype_out(Tensor self, Tensor mat2, ScalarType out_dtype, *, T
 
 #### 2.2.2 Shape 支持
 
-1. 输入参数 `self` 和 `mat2` 必须为二维 Tensor。
-2. 测试 shape：`(128, 128)`。
+`self` 和 `mat2` 固定为 2 维 Tensor。
 
 ### 2.3 特殊限制说明
 

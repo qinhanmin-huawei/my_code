@@ -33,8 +33,7 @@ torch.ops.aten._foreach_reciprocal.default(self: Tensor[]) -> Tensor[]
 
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. 输入 Tensor 列表长度固定为 `2`，每个元素使用相同的遍历 shape。输入值范围固定为 `[1, 8)`。
+输入列表中的 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

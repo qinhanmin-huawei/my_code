@@ -37,8 +37,7 @@ torch.ops.aten.embedding.out(Tensor weight, Tensor indices, SymInt padding_idx=-
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度范围为 `[1, 4]`。
-2. 测试 shape：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
+`weight` 固定为 2 维 Tensor；`indices` 支持 1～4 维 Tensor。
 
 ### 2.3 特殊限制说明
 

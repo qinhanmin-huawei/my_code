@@ -33,8 +33,7 @@ torch.ops.aten._foreach_mul.Tensor(self: Tensor[], other: Tensor) -> Tensor[]
 
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. 输入列表长度固定为 `2`；`other` 为 0 维标量张量，dtype 与列表元素相同；bool 输入值为 `False` 或 `True`，其他 dtype 的输入值范围为 `[-4, 4)`。
+输入列表中的 Tensor 支持 1～4 维；`other` 固定为 0 维 Tensor。
 
 ### 2.3 特殊限制说明
 

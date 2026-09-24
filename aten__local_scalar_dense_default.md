@@ -32,8 +32,7 @@ torch.ops.aten._local_scalar_dense.default(Tensor self) -> Scalar
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度范围为 `[0, 1]`。
-2. 测试 shape：`()`、`(1,)`。
+输入 Tensor 支持 0～1 维。
 
 ### 2.3 特殊限制说明
 

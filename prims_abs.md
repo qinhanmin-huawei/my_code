@@ -30,7 +30,7 @@ torch.ops.prims.abs(a: Tensor) -> Tensor
 
 #### 2.2.2 Shape 支持
 
-1、shape维度范围：[1-4]
+输入 Tensor 支持 1～4 维。
 
 
 ### 2.3 特殊限制说明

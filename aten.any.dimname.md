@@ -35,8 +35,7 @@ torch.ops.aten.any.dimname(self: Tensor, dim: str, keepdim: bool=False) -> Tenso
 
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. 输入最后一维名称固定为 `reduce`，`dim` 固定为 `reduce`，`keepdim` 固定为 `True`；输入到输出 shape：`(4,) -> (1,)`、`(4, 8) -> (4, 1)`、`(4, 8, 16) -> (4, 8, 1)`、`(4, 8, 16, 32) -> (4, 8, 16, 1)`。
+输入 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

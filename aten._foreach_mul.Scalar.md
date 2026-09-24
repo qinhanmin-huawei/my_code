@@ -33,8 +33,7 @@ torch.ops.aten._foreach_mul.Scalar(self: Tensor[], scalar: Scalar) -> Tensor[]
 
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. 输入列表长度固定为 `2`，每个元素使用相同的遍历 shape；bool 输入值为 `False` 或 `True` 且 `scalar` 为 `True`，其他 dtype 的输入值范围为 `[-4, 4)` 且 `scalar` 为 `2`。
+输入列表中的 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

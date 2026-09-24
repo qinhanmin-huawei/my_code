@@ -35,8 +35,7 @@ torch.ops.aten.bmm.dtype_out(Tensor self, Tensor mat2, ScalarType out_dtype, *, 
 
 #### 2.2.2 Shape 支持
 
-1. 输入参数 `self` 和 `mat2` 必须为三维 Tensor。
-2. 测试 shape：`(4, 8, 16)`。
+`self` 和 `mat2` 固定为 3 维 Tensor。
 
 ### 2.3 特殊限制说明
 

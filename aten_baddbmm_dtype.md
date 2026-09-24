@@ -37,8 +37,7 @@ torch.ops.aten.baddbmm.dtype(Tensor self, Tensor batch1, Tensor batch2, ScalarTy
 
 #### 2.2.2 Shape 支持
 
-1. 输入参数 `batch1` 和 `batch2` 必须为三维 Tensor；`self` 必须可广播到三维批量矩阵乘输出。
-2. 测试 shape：`(4, 8, 16)`。
+`batch1` 和 `batch2` 固定为 3 维 Tensor；`self` 支持 0～3 维 Tensor。
 
 ### 2.3 特殊限制说明
 

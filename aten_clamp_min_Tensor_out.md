@@ -36,9 +36,7 @@ torch.ops.aten.clamp_min.Tensor_out(self: Tensor, min: Tensor, *, out: Tensor(a!
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度范围为 `[1, 4]`。
-2. 测试 shape：`(128,)`、`(128, 128)`、`(128, 1024, 4096)`、`(4, 8, 16, 32)`。
-3. `self` 与 `min` 必须满足广播规则，`out` shape 应与广播结果一致。
+输入 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

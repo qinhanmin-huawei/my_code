@@ -33,8 +33,7 @@ torch.ops.aten.fill_.Tensor(Tensor(a!) self, Tensor value) -> Tensor(a!)
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度范围为 `[1, 4]`。
-2. 测试 shape：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
+`self` 支持 1～4 维 Tensor；`value` 固定为 0 维 Tensor。
 
 ### 2.3 特殊限制说明
 

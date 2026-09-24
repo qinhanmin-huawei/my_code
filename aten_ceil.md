@@ -33,7 +33,7 @@ torch.ops.aten.ceil(self: Tensor) -> Tensor
 注:aclnnceil不支持int类型，eager会报错
 #### 2.2.2 Shape 支持
 
-覆盖 1～4 维。shape 遍历值：[(32,), (32, 32), (32, 32, 32), (4, 8, 16, 32)]。
+输入 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

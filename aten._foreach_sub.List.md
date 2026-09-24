@@ -35,8 +35,7 @@ torch.ops.aten._foreach_sub.List(self: Tensor[], other: Tensor[], *, alpha: Scal
 注：不支持int8和int64的npu的eager。
 #### 2.2.2 Shape 支持
 
-1. `shape` 遍历值：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
-2. 两个输入列表长度均固定为 `2`，对应元素使用相同的遍历 shape；`alpha` 固定为 `2`；输入值范围固定为 `[-8, 8)`。
+输入列表中的 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

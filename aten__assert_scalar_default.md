@@ -34,8 +34,7 @@ torch.ops.aten._assert_scalar.default(Scalar self, str assert_msg) -> ()
 float类型报错'float' object has no attribute 'meta'与社区版pytorch一致。
 #### 2.2.2 Shape 支持
 
-1. 本测试不涉及 Tensor shape。
-2. 测试输入为 Python 标量。
+该算子不涉及 Tensor shape。
 
 ### 2.3 特殊限制说明
 

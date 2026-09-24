@@ -36,8 +36,7 @@ torch.ops.aten._unsafe_index_put.default(Tensor self, Tensor?[] indices, Tensor 
 当accumulate为True时，不支持int8类型，因为会生成int8类型的原子加。与社区上游报错一致:atomic_add does not support int8。
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度范围为 `[1, 4]`。
-2. 测试 shape：`(4,)`、`(4, 8)`、`(4, 8, 16)`、`(4, 8, 16, 32)`。
+输入 Tensor 支持 1～4 维。
 
 ### 2.3 特殊限制说明
 

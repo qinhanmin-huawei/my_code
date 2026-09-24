@@ -36,8 +36,7 @@ torch.ops.aten.upsample_nearest3d.default(Tensor self, SymInt[3] output_size, fl
 
 #### 2.2.2 Shape 支持
 
-1. 本测试覆盖的 shape 维度固定为 `5`。
-2. 测试 shape：`(1, 4, 8, 16, 32)`。
+`self` 固定为 5 维 Tensor。
 
 ### 2.3 特殊限制说明
 

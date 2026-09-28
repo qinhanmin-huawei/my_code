@@ -28,8 +28,8 @@ torch.ops.aten._foreach_div.Tensor(self: Tensor[], other: Tensor) -> Tensor[]
 
 | 设备 | uint8 | int8 | uint16 | int16 | uint32 | int32 | uint64 | int64 | fp16 | fp32 | bf16 | bool |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GPU | - | x | - | - | - | x | - | x | x | x | x | - |
-| NPU | - | x | - | - | - | x | - | x | x | x | x | - |
+| GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
+| NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 
 注：gpu，npu eager模式均不支持该算子。
 #### 2.2.2 Shape 支持
@@ -57,6 +57,6 @@ torch.ops.aten._foreach_div.Tensor(self: Tensor[], other: Tensor) -> Tensor[]
             return [item + item for item in result]
 
         tensors = [self._generate_tensor(shape, dtype, min=1, max=8) for _ in range(2)]
-        other = self._generate_tensor(shape, dtype, min=1, max=8)
+        other = self._generate_tensor((), dtype, min=1, max=8)
         self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensors, other)
 ```

@@ -32,7 +32,7 @@ torch.ops.aten._foreach_add.List(self: Tensor[], other: Tensor[], *, alpha: Scal
 | GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | √ |
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | √ |
 
-注：bool 输入执行逻辑或语义，npu eager模式不支持int64，bool类型。
+注：bool 输入执行逻辑或语义，npu eager模式不支持int64，int8类型。
 #### 2.2.2 Shape 支持
 
 输入列表中的 Tensor 支持 1～4 维。

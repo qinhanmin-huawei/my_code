@@ -31,7 +31,6 @@ torch.ops.aten._foreach_div.Tensor(self: Tensor[], other: Tensor) -> Tensor[]
 | GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 
-注：gpu，npu eager模式均不支持该算子。
 #### 2.2.2 Shape 支持
 
 输入列表中的 Tensor 支持 1～4 维；`other` 固定为 0 维 Tensor。

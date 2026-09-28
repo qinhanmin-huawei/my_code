@@ -31,7 +31,7 @@ torch.ops.aten._foreach_sub.Scalar(self: Tensor[], scalar: Scalar) -> Tensor[]
 | GPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 | NPU | - | √ | - | - | - | √ | - | √ | √ | √ | √ | - |
 
-注：不支持int8和int64的npu的eager。
+注：npu eager模式不支持int8，int64类型。
 #### 2.2.2 Shape 支持
 
 输入列表中的 Tensor 支持 1～4 维。

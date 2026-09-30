@@ -52,7 +52,7 @@ NPU Eager 路径的 `aclnnArange` 不支持 int8 输出；Inductor 路径支持�
 
 ### 2.4 使用方法
 
-辅助张量仅提供长度、dtype 和 device，其元素值不参与序列生成。框架示例使用非空 int32、int64 序列。
+空用例不要求生成 kernel 且不计时。
 
 ```python
     dtypes = ['int32', 'int64']
@@ -60,7 +60,10 @@ NPU Eager 路径的 `aclnnArange` 不支持 int8 输出；Inductor 路径支持�
     lengths = list(dict.fromkeys(shape[-1] for shape in shapes))
     cases = [dict(length=length, start=0, step=1) for length in lengths]
     if lengths:
-        cases.append(dict(length=lengths[0], start=lengths[0] - 1, step=-1))
+        cases.extend([
+            dict(length=lengths[0], start=lengths[0] - 1, step=-1),
+            dict(length=0, start=0, step=1),
+        ])
 
     @parametrize('case', cases)
     @parametrize('dtype', dtypes)
@@ -78,5 +81,6 @@ NPU Eager 路径的 `aclnnArange` 不支持 int8 输出；Inductor 路径支持�
             return y + y
 
         tensor = self._generate_tensor(shape, dtype)
-        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensor, start, step)
+        empty = case['length'] == 0
+        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, tensor, start, step, test_mode='non_kernel' if empty else 'default', cpu_reference=not empty, benchmark=None if empty else 'profiler')
 ```

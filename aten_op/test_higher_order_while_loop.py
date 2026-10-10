@@ -5,7 +5,7 @@ from testutils import TestUtils
 
 class TestHigherOrderWhileLoop(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_prims_while_loop(self, shape):
+    def test_higher_order_while_loop(self, shape):
         def op_calc(x, num_iters):
             def cond_fn(*carry):
                 return torch.ops.aten.lt.Tensor(carry[1], carry[2])

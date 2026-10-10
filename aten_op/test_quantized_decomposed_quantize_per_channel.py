@@ -3,9 +3,9 @@ from torch.testing._internal.common_utils import run_tests, parametrize, instant
 from testutils import TestUtils
 
 
-class TestPrimsQuantizePerChannel(TestUtils):
+class TestQuantizedDecomposedQuantizePerChannel(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_prims_quantize_per_channel(self, shape):
+    def test_quantized_decomposed_quantize_per_channel(self, shape):
         def op_calc(x, scale, zero_point):
             return torch.ops.quantized_decomposed.quantize_per_channel(
                 x, scale, zero_point, 0, -128, 127, torch.int8)
@@ -23,7 +23,7 @@ class TestPrimsQuantizePerChannel(TestUtils):
                                    op_name="quantized_decomposed.quantize_per_channel")
 
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_prims_quantize_per_channel_default(self, shape):
+    def test_quantized_decomposed_quantize_per_channel_default(self, shape):
         def op_calc(x, scale, zero_point):
             return torch.ops.quantized_decomposed.quantize_per_channel.default(
                 x, scale, zero_point, 0, -128, 127, torch.int8)
@@ -41,7 +41,7 @@ class TestPrimsQuantizePerChannel(TestUtils):
                                    op_name="quantized_decomposed.quantize_per_channel")
 
 
-instantiate_parametrized_tests(TestPrimsQuantizePerChannel)
+instantiate_parametrized_tests(TestQuantizedDecomposedQuantizePerChannel)
 
 if __name__ == "__main__":
     run_tests()

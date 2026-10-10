@@ -5,7 +5,7 @@ from testutils import TestUtils
 
 class TestRngprimsPhiloxRand(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_prims_philox_rand(self, shape):
+    def test_rngprims_philox_rand(self, shape):
         def op_calc(seed, offset):
             result, _ = torch.ops.rngprims.philox_rand(seed, offset, shape)
             return result
@@ -20,7 +20,7 @@ class TestRngprimsPhiloxRand(TestUtils):
                                    op_name="rngprims.philox_rand")
 
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_prims_philox_rand_default(self, shape):
+    def test_rngprims_philox_rand_default(self, shape):
         def op_calc(seed, offset):
             result, _ = torch.ops.rngprims.philox_rand.default(seed, offset, shape)
             return result

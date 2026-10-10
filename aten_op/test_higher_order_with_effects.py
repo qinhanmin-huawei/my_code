@@ -5,7 +5,7 @@ from testutils import TestUtils
 
 class TestHigherOrderWithEffects(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_prims_with_effects(self, shape):
+    def test_higher_order_with_effects(self, shape):
         def op_calc(token, x, y):
             _, result = torch.ops.higher_order.with_effects(
                 token, torch.ops.aten.mul.Tensor, x, y)

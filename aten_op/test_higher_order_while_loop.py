@@ -5,7 +5,8 @@ from testutils import TestUtils
 
 class TestHigherOrderWhileLoop(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_higher_order_while_loop(self, shape):
+    @parametrize('dtype', TestUtils._test_dtypes_without_bool)
+    def test_higher_order_while_loop(self, shape, dtype):
         def op_calc(x, num_iters):
             def cond_fn(*carry):
                 return torch.ops.aten.lt.Tensor(carry[1], carry[2])
@@ -24,9 +25,9 @@ class TestHigherOrderWhileLoop(TestUtils):
         def op_calc_1(x, num_iters):
             return op_calc(x, num_iters) + op_calc(x, num_iters)
 
-        x = self._generate_tensor(shape, 'float32', min=-2, max=2)
+        x = self._generate_tensor(shape, dtype, min=-2, max=2)
         num_iters = torch.tensor(4, dtype=torch.int64, device='npu')
-        self.execute_inductor_test(shape, 'float32', op_calc, op_calc_1, x, num_iters,
+        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, x, num_iters,
                                    op_name="higher_order.while_loop")
 
 

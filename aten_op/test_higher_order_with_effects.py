@@ -5,7 +5,8 @@ from testutils import TestUtils
 
 class TestHigherOrderWithEffects(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
-    def test_higher_order_with_effects(self, shape):
+    @parametrize('dtype', TestUtils._test_dtypes)
+    def test_higher_order_with_effects(self, shape, dtype):
         def op_calc(token, x, y):
             _, result = torch.ops.higher_order.with_effects(
                 token, torch.ops.aten.mul.Tensor, x, y)
@@ -14,12 +15,12 @@ class TestHigherOrderWithEffects(TestUtils):
         def op_calc_1(token, x, y):
             _, result = torch.ops.higher_order.with_effects(
                 token, torch.ops.aten.mul.Tensor, x, y)
-            return result + result
+            return torch.logical_or(result, result) if result.dtype == torch.bool else result + result
 
         token = [torch.zeros((0,), dtype=torch.int64, device='npu')]
-        x = self._generate_tensor(shape, 'float32', min=-2, max=2)
-        y = self._generate_tensor(shape, 'float32', min=-2, max=2)
-        self.execute_inductor_test(shape, 'float32', op_calc, op_calc_1, token, x, y,
+        x = self._generate_tensor(shape, dtype, min=-2, max=2)
+        y = self._generate_tensor(shape, dtype, min=-2, max=2)
+        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, token, x, y,
                                    op_name="higher_order.with_effects")
 
 

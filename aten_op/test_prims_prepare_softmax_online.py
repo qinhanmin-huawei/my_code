@@ -7,19 +7,16 @@ class TestPrimsPrepareSoftmaxOnline(TestUtils):
     @parametrize('shape', TestUtils._pointwise_demo_shapes)
     @parametrize('dtype', TestUtils._test_float_dtypes)
     def test_prims_prepare_softmax_online_default(self, shape, dtype):
-        def op_calc(prev_max, new_values, new_mask):
-            return torch.ops.prims.prepare_softmax_online.default(
-                prev_max, new_values, new_mask)
+        def op_calc(x):
+            xmax, _ = torch.ops.prims.prepare_softmax_online(x, -1)
+            return xmax
 
-        def op_calc_1(prev_max, new_values, new_mask):
-            return torch.ops.prims.prepare_softmax_online.default(
-                prev_max, new_values, new_mask)
+        def op_calc_1(x):
+            _, xsum = torch.ops.prims.prepare_softmax_online(x, -1)
+            return xsum
 
-        prev_max = self._generate_tensor(shape, dtype, min=-2, max=0)
-        new_values = self._generate_tensor(shape, dtype, min=-5, max=5)
-        new_mask = self._generate_tensor(shape, 'bool')
-        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1,
-                                   prev_max, new_values, new_mask,
+        x = self._generate_tensor(shape, dtype, min=-5, max=5)
+        self.execute_inductor_test(shape, dtype, op_calc, op_calc_1, x,
                                    op_name="prims.prepare_softmax_online")
 
 

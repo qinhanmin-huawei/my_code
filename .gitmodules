@@ -1,0 +1,3 @@
+[submodule "aten_op/spec/AtenOp-Spec"]
+	path = aten_op/spec/AtenOp-Spec
+	url = https://gitcode.com/jimmycao9929/AtenOp-Spec.git

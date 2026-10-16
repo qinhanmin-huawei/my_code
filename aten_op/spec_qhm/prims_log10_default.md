@@ -32,7 +32,11 @@ torch.ops.prims.log10.default(a: Tensor) -> Tensor
 
 ### 2.3 特殊限制说明
 
+<<<<<<< HEAD:aten_op/spec_qhm/prims_log10_default.md
 > 无
+=======
+1、bool 输入不支持。
+>>>>>>> c0702fe93a37f06faf673ddfc5cfc426598520ae:aten_op/spec/AtenOp-Spec/prims_log10_default.md
 
 ### 2.4 使用方法
 

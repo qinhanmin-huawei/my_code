@@ -10,7 +10,8 @@
 说明:
     - 用例清单每行格式为:  py文件名   用例名   (中间用空格/tab 隔开)
     - 用例名不带参数、也不知道类名，脚本通过 pytest --collect-only 收集出完整的
-      执行用例名 (nodeid)，并跑完该用例的所有参数组合。
+      执行用例名 (nodeid) 再匹配：精确同名，或 "用例名_" 前缀（动态生成的用例家族）。
+      多个请求名同时命中同一个用例时，归入最长（最具体）的那个，避免相似名误匹配。
     - 每个参数组合单独起线程 + 单独子进程执行，个别用例 core 不影响其它用例。
     - pytest 输出实时流式写入日志文件（每行都 flush）。
 """
@@ -139,8 +140,8 @@ def _child_env():
     return env
 
 
-def collect_nodeids(pyfile, workdir, testname):
-    """收集 py 文件中指定用例的全部参数组合 nodeid。"""
+def collect_nodeids(pyfile, workdir):
+    """收集 py 文件中全部用例的 nodeid。"""
     args = ["--collect-only", "-q", pyfile, "-p", "no:cacheprovider"]
     try:
         proc = subprocess.run(
@@ -158,12 +159,43 @@ def collect_nodeids(pyfile, workdir, testname):
     nodeids = []
     for line in out.splitlines():
         line = line.strip()
-        if "::" not in line:
-            continue
-        base = line.split("::")[-1].split("[")[0]
-        if base == testname and line not in nodeids:
+        if "::" in line and line not in nodeids:
             nodeids.append(line)
     return nodeids, rc, out
+
+
+def _name_of(nodeid):
+    """取 nodeid 的方法名（去掉参数部分）。"""
+    return nodeid.split("::")[-1].split("[")[0]
+
+
+def resolve_nodeids(all_nodeids, requested_names):
+    """把文件内收集到的 nodeid 分配给各个请求名。
+
+    规则（解决相似名字误匹配）:
+      1. 精确同名 -> 直接归属；
+      2. 否则按 "请求名_" 前缀匹配，若同时命中多个请求名，归入「最长」的那个
+         （例如 test_some_batched_x 属于 test_some_batched 而不是 test_some）。
+
+    返回 (归属映射 {请求名: [nodeid,...]}, 警告列表)。
+    """
+    mapping = {name: [] for name in requested_names}
+    warnings = []
+
+    for nid in all_nodeids:
+        base = _name_of(nid)
+        if base in mapping:                      # 精确同名
+            mapping[base].append(nid)
+            continue
+        cands = [n for n in requested_names if base.startswith(n + "_")]
+        if not cands:
+            continue
+        best = max(cands, key=len)               # 最长前缀优先，避免误匹配
+        tied = [n for n in cands if len(n) == len(best)]
+        if len(tied) > 1:
+            warnings.append("用例 %s 同时命中多个请求名 %s，已归入 %s" % (base, tied, best))
+        mapping[best].append(nid)
+    return mapping, warnings
 
 
 def _stream_pytest(args, workdir, on_line, timeout=None):
@@ -244,9 +276,25 @@ def status_label(status):
 
 
 def build_reproduce(nodeid, workdir):
-    """生成一键复现命令。"""
+    """生成一键复现命令：命令 + 路径 + 用例(含类名) + 参数。
+
+    直接在终端粘贴即可运行；cd 语法按当前操作系统自动适配（Windows 用 cd /d，
+    Linux/macOS 用 cd）。
+    """
     args = " ".join(EXTRA_PYTEST_ARGS)
-    return 'cd /d "%s" && "%s" -m pytest "%s" %s' % (workdir, PYTHON, nodeid, args)
+    cd = 'cd /d "%s"' % workdir if os.name == "nt" else 'cd "%s"' % workdir
+    return '%s && "%s" -m pytest "%s" %s' % (cd, PYTHON, nodeid, args)
+
+
+def build_big_reproduce(nodeids, workdir):
+    """生成大用例的执行命令：一次执行该用例的「所有」参数组合。
+
+    直接把所有参数组合的 nodeid 都列上，精确无歧义。
+    """
+    args = " ".join(EXTRA_PYTEST_ARGS)
+    cd = 'cd /d "%s"' % workdir if os.name == "nt" else 'cd "%s"' % workdir
+    quoted = " ".join('"%s"' % nid for nid in nodeids)
+    return '%s && "%s" -m pytest %s %s' % (cd, PYTHON, quoted, args)
 
 
 # ============================ 用例执行 ============================
@@ -274,8 +322,6 @@ def _worker(idx, total, nodeid, workdir, write, box, sem):
 
         write(EQ_SEP)
         write("[小用例 %d/%d] %s" % (idx, total, nodeid))
-        write("一键复现命令:")
-        write(build_reproduce(nodeid, workdir))
         write(THIN_SEP)
         write("pytest 输出 (实时):")
 
@@ -288,6 +334,8 @@ def _worker(idx, total, nodeid, workdir, write, box, sem):
 
         write(THIN_SEP)
         write("状态: %s    (returncode=%d)" % (status_label(status), rc))
+        write("复现命令 (仅当前参数组合):")
+        write(build_reproduce(nodeid, workdir))
 
         box[idx] = status
         with _print_lock:
@@ -322,7 +370,7 @@ def build_summary(nodeids, results):
     return "\n".join(lines)
 
 
-def run_big_case(pyfile, testname, roots, write):
+def run_big_case(pyfile, testname, filepath, workdir, nodeids, write):
     """执行一个大用例的所有参数组合，实时写入日志。
 
     返回 (nodeid -> status 映射, summary 文本)。
@@ -331,23 +379,11 @@ def run_big_case(pyfile, testname, roots, write):
     write(STAR_SEP)
     write(STAR_SEP)
     write("大用例: %s :: %s" % (pyfile, testname))
-
-    filepath, workdir = find_file(pyfile, roots)
-    if not filepath:
-        write("[错误] 未在搜索根目录中找到文件 %s" % pyfile)
-        write("搜索根目录: %s" % roots)
-        write(STAR_SEP)
-        return {}, ""
-
     write("文件路径: %s" % filepath)
     write("工作目录: %s" % workdir)
 
-    nodeids, rc, collect_out = collect_nodeids(pyfile, workdir, testname)
     if not nodeids:
-        write("[错误] 未收集到用例 %s 的任何参数组合 (returncode=%d)" % (testname, rc))
-        write(THIN_SEP)
-        write("pytest --collect-only 输出:")
-        write(collect_out.rstrip("\n"))
+        write("[错误] 未匹配到用例 %s 的任何用例（匹配规则：精确同名，或 '用例名_' 前缀）" % testname)
         write(STAR_SEP)
         return {}, ""
 
@@ -367,6 +403,9 @@ def run_big_case(pyfile, testname, roots, write):
 
     summary_text = build_summary(nodeids, box)
     write(summary_text)
+    write(THIN_SEP)
+    write("大用例执行命令 (一次执行全部 %d 个参数组合):" % len(nodeids))
+    write(build_big_reproduce(nodeids, workdir))
     write(STAR_SEP)
 
     status_map = {nodeid: box[i] for i, nodeid in enumerate(nodeids, 1)}
@@ -374,6 +413,18 @@ def run_big_case(pyfile, testname, roots, write):
 
 
 # ============================ 入口 ============================
+
+def group_by_file(cases):
+    """按 py 文件名分组，保持首次出现顺序，返回 [(pyfile, [用例名...]), ...]。"""
+    order = []
+    name_map = {}
+    for pyfile, testname in cases:
+        if pyfile not in name_map:
+            name_map[pyfile] = []
+            order.append(pyfile)
+        name_map[pyfile].append(testname)
+    return [(f, name_map[f]) for f in order]
+
 
 def main():
     txt_path, extra_roots = parse_argv(sys.argv[1:])
@@ -395,6 +446,8 @@ def main():
         print("[错误] 用例清单为空")
         sys.exit(1)
 
+    groups = group_by_file(cases)
+
     os.makedirs(LOG_DIR, exist_ok=True)
     run_ts = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
@@ -407,7 +460,7 @@ def main():
 
     handles = {}
     overall = []  # (大用例标题, {nodeid: status})
-    for pyfile, testname in cases:
+    for pyfile, names in groups:
         stem = os.path.splitext(os.path.basename(pyfile))[0]
         if stem not in handles:
             log_path = os.path.join(LOG_DIR, "%s_%s.log" % (stem, run_ts))
@@ -417,11 +470,30 @@ def main():
             handles[stem] = handle
         write = make_writer(handles[stem])
 
-        status_map, summary_text = run_big_case(pyfile, testname, roots, write)
-        if summary_text:
-            print(summary_text)
+        filepath, workdir = find_file(pyfile, roots)
+        if not filepath:
+            for name in names:
+                write(STAR_SEP)
+                write(STAR_SEP)
+                write(STAR_SEP)
+                write("大用例: %s :: %s" % (pyfile, name))
+                write("[错误] 未在搜索根目录中找到文件 %s" % pyfile)
+                write("搜索根目录: %s" % roots)
+                write(STAR_SEP)
+                overall.append(("%s :: %s" % (pyfile, name), {}))
+            continue
 
-        overall.append(("%s :: %s" % (pyfile, testname), status_map))
+        all_nodeids, rc, collect_out = collect_nodeids(pyfile, workdir)
+        mapping, warnings = resolve_nodeids(all_nodeids, names)
+        for w in warnings:
+            write("[警告] %s" % w)
+
+        for name in names:
+            nodeids = mapping.get(name, [])
+            status_map, summary_text = run_big_case(pyfile, name, filepath, workdir, nodeids, write)
+            if summary_text:
+                print(summary_text)
+            overall.append(("%s :: %s" % (pyfile, name), status_map))
 
     for h in handles.values():
         h.close()

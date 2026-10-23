@@ -12,6 +12,7 @@
     - 用例名不带参数、也不知道类名，脚本通过 pytest --collect-only 收集出完整的
       执行用例名 (nodeid)，并跑完该用例的所有参数组合。
     - 每个参数组合单独起线程 + 单独子进程执行，个别用例 core 不影响其它用例。
+    - pytest 输出实时流式写入日志文件（每行都 flush）。
 """
 
 import datetime
@@ -50,6 +51,9 @@ PYTHON = sys.executable
 # 每个小用例（单个参数组合）的超时时间（秒），<= 0 表示不限制
 PER_CASE_TIMEOUT = 0
 
+# 并行线程数（同时执行的 pytest 子进程个数），<= 0 表示不限制（有几个参数组合起几个）
+MAX_PARALLEL = 4
+
 # pytest 附加参数
 EXTRA_PYTEST_ARGS = ["-v"]
 
@@ -59,23 +63,13 @@ STAR_SEP = "*" * 100          # 大用例之间的分隔（3 行）
 EQ_SEP = "=" * 200            # 不同参数组合之间的分隔
 THIN_SEP = "-" * 100          # 参数块内部的分隔
 
-SUMMARY_ART_TOP = "@" * 84
-SUMMARY_ART_MID = "@" * 36 + "  S U M M A R Y  " + "@" * 36
-SUMMARY_ART_BOT = "@" * 84
+# 状态图案（emoji 圆圈，自带颜色）
+EMOJI_PASS = "🟢"
+EMOJI_FAIL = "🔴"
+EMOJI_SKIP = "🟡"
+STATUS_EMOJI = {"PASS": EMOJI_PASS, "FAIL": EMOJI_FAIL, "SKIP": EMOJI_SKIP}
 
-# ============================ 颜色（ANSI） ============================
-
-ANSI_RESET = "\033[0m"
-COLOR_ART = "\033[95m"    # 亮品红
-COLOR_PASS = "\033[92m"   # 亮绿
-COLOR_FAIL = "\033[91m"   # 亮红
-COLOR_SKIP = "\033[93m"   # 亮黄
-COLOR_PALETTE = {"PASS": COLOR_PASS, "FAIL": COLOR_FAIL, "SKIP": COLOR_SKIP}
-
-
-def colorize(text, color):
-    """给文本加上 ANSI 颜色。"""
-    return "%s%s%s" % (color, text, ANSI_RESET)
+SUMMARY_SEP = "─" * 72        # summary 内部分隔线
 
 
 # ============================ 工具函数 ============================
@@ -138,31 +132,29 @@ def find_file(pyfile, roots):
     return None, None
 
 
-def _run_pytest(args, workdir, timeout=None):
-    """执行 pytest 子进程，返回 (returncode, 合并后的输出文本)。"""
-    cmd = [PYTHON, "-m", "pytest"] + args
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=workdir,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            timeout=timeout if timeout and timeout > 0 else None,
-        )
-        out = proc.stdout.decode("utf-8", "replace")
-        return proc.returncode, out
-    except subprocess.TimeoutExpired as e:
-        out = (e.output or b"").decode("utf-8", "replace")
-        out += "\n[TIMEOUT] 超过 %s 秒未结束" % timeout
-        return -1, out
-    except Exception as e:  # noqa: BLE001
-        return -1, "[ERROR] 执行异常: %r" % e
+def _child_env():
+    """子进程环境：python 不缓冲，保证输出实时。"""
+    env = os.environ.copy()
+    env["PYTHONUNBUFFERED"] = "1"
+    return env
 
 
 def collect_nodeids(pyfile, workdir, testname):
     """收集 py 文件中指定用例的全部参数组合 nodeid。"""
     args = ["--collect-only", "-q", pyfile, "-p", "no:cacheprovider"]
-    rc, out = _run_pytest(args, workdir)
+    try:
+        proc = subprocess.run(
+            [PYTHON, "-m", "pytest"] + args,
+            cwd=workdir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=_child_env(),
+        )
+        out = proc.stdout.decode("utf-8", "replace")
+        rc = proc.returncode
+    except Exception as e:  # noqa: BLE001
+        return [], -1, "[ERROR] 收集失败: %r" % e
+
     nodeids = []
     for line in out.splitlines():
         line = line.strip()
@@ -174,6 +166,69 @@ def collect_nodeids(pyfile, workdir, testname):
     return nodeids, rc, out
 
 
+def _stream_pytest(args, workdir, on_line, timeout=None):
+    """执行 pytest，边跑边把每一行交给 on_line 输出（实时）。
+
+    返回 (returncode, 合并后的输出文本)。
+    """
+    cmd = [PYTHON, "-m", "pytest"] + args
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=workdir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            bufsize=1,
+            universal_newlines=True,
+            encoding="utf-8",
+            errors="replace",
+            env=_child_env(),
+        )
+    except Exception as e:  # noqa: BLE001
+        text = "[ERROR] 启动 pytest 进程失败: %r" % e
+        on_line(text)
+        return -1, text
+
+    timed_out = {"v": False}
+    timer = None
+    if timeout and timeout > 0:
+        def _kill():
+            timed_out["v"] = True
+            try:
+                proc.kill()
+            except Exception:  # noqa: BLE001
+                pass
+
+        timer = threading.Timer(timeout, _kill)
+        timer.start()
+
+    collected = []
+    try:
+        for line in proc.stdout:
+            line = line.rstrip("\n")
+            collected.append(line)
+            on_line(line)
+    except Exception as e:  # noqa: BLE001
+        msg = "[ERROR] 读取输出异常: %r" % e
+        collected.append(msg)
+        on_line(msg)
+    finally:
+        if timer is not None:
+            timer.cancel()
+        try:
+            proc.stdout.close()
+        except Exception:  # noqa: BLE001
+            pass
+
+    rc = proc.wait()
+    if timed_out["v"]:
+        msg = "[TIMEOUT] 超过 %s 秒未结束，已强制终止" % timeout
+        collected.append(msg)
+        on_line(msg)
+        rc = -1
+    return rc, "\n".join(collected)
+
+
 def decide_status(rc, output):
     """根据返回码和输出判断 3 种状态。"""
     if rc != 0:
@@ -181,6 +236,11 @@ def decide_status(rc, output):
     if "SKIPPED" in output:
         return "SKIP"
     return "PASS"
+
+
+def status_label(status):
+    """带 emoji 的状态标签，例如 '🟢 PASS'。"""
+    return "%s %s" % (STATUS_EMOJI[status], status)
 
 
 def build_reproduce(nodeid, workdir):
@@ -192,113 +252,125 @@ def build_reproduce(nodeid, workdir):
 # ============================ 用例执行 ============================
 
 _print_lock = threading.Lock()
+_log_lock = threading.Lock()
 
 
-def _worker(idx, total, nodeid, workdir, box):
-    """单个参数组合：单独线程 + 单独子进程执行。"""
-    with _print_lock:
-        print("[开始] (%d/%d) %s" % (idx, total, nodeid))
-    rc, out = _run_pytest([nodeid] + EXTRA_PYTEST_ARGS + ["-p", "no:cacheprovider"],
-                          workdir, PER_CASE_TIMEOUT)
-    status = decide_status(rc, out)
+def make_writer(handle):
+    """构造一个线程安全的日志写入函数（每行立即 flush，实时落盘）。"""
+    def write(text):
+        with _log_lock:
+            handle.write(text + "\n")
+            handle.flush()
+    return write
 
-    block = []
-    block.append(EQ_SEP)
-    block.append("[小用例 %d/%d] %s" % (idx, total, nodeid))
-    block.append("状态: %s" % colorize(status, COLOR_PALETTE[status]))
-    block.append("一键复现命令:")
-    block.append(build_reproduce(nodeid, workdir))
-    block.append(THIN_SEP)
-    block.append("pytest 输出 (returncode=%d):" % rc)
-    block.append(out.rstrip("\n"))
-    box[idx] = (status, "\n".join(block))
 
-    with _print_lock:
-        print("[结束] (%d/%d) %-40s -> %s" % (idx, total, nodeid, status))
+def _worker(idx, total, nodeid, workdir, write, box, sem):
+    """单个参数组合：单独线程 + 单独子进程执行，输出实时写日志。"""
+    if sem is not None:
+        sem.acquire()
+    try:
+        with _print_lock:
+            print("[开始] (%d/%d) %s" % (idx, total, nodeid))
+
+        write(EQ_SEP)
+        write("[小用例 %d/%d] %s" % (idx, total, nodeid))
+        write("一键复现命令:")
+        write(build_reproduce(nodeid, workdir))
+        write(THIN_SEP)
+        write("pytest 输出 (实时):")
+
+        def on_line(line):
+            write(line)
+
+        rc, out = _stream_pytest([nodeid] + EXTRA_PYTEST_ARGS + ["-p", "no:cacheprovider"],
+                                 workdir, on_line, PER_CASE_TIMEOUT)
+        status = decide_status(rc, out)
+
+        write(THIN_SEP)
+        write("状态: %s    (returncode=%d)" % (status_label(status), rc))
+
+        box[idx] = status
+        with _print_lock:
+            print("[结束] (%d/%d) %-40s -> %s" % (idx, total, nodeid, status))
+    finally:
+        if sem is not None:
+            sem.release()
 
 
 def build_summary(nodeids, results):
-    """生成带颜色图案的 summary 文本。"""
+    """生成简洁美观的 summary 文本。"""
     groups = {"PASS": [], "FAIL": [], "SKIP": []}
     for i, nodeid in enumerate(nodeids, 1):
-        status = results.get(i, ("FAIL", ""))[0]
-        groups[status].append(nodeid)
+        groups[results.get(i, "FAIL")].append(nodeid)
 
     lines = [
-        EQ_SEP,
-        colorize(SUMMARY_ART_TOP, COLOR_ART),
-        colorize(SUMMARY_ART_MID, COLOR_ART),
-        colorize(SUMMARY_ART_BOT, COLOR_ART),
+        SUMMARY_SEP,
+        "  SUMMARY   %s PASS %d   %s FAIL %d   %s SKIP %d" % (
+            EMOJI_PASS, len(groups["PASS"]),
+            EMOJI_FAIL, len(groups["FAIL"]),
+            EMOJI_SKIP, len(groups["SKIP"])),
+        SUMMARY_SEP,
     ]
-    lines.append("总参数组合: %d    %s    %s    %s" % (
-        len(nodeids),
-        colorize("PASS: %d" % len(groups["PASS"]), COLOR_PASS),
-        colorize("FAIL: %d" % len(groups["FAIL"]), COLOR_FAIL),
-        colorize("SKIP: %d" % len(groups["SKIP"]), COLOR_SKIP),
-    ))
-    lines.append(THIN_SEP)
     for status in ("PASS", "FAIL", "SKIP"):
-        lines.append(colorize("%s (%d):" % (status, len(groups[status])), COLOR_PALETTE[status]))
+        lines.append("%s %d" % (status_label(status), len(groups[status])))
         if groups[status]:
             for nid in groups[status]:
                 lines.append("    - %s" % nid)
         else:
             lines.append("    (无)")
-        lines.append(THIN_SEP)
-    lines.append(colorize(SUMMARY_ART_TOP, COLOR_ART))
-    lines.append(colorize(SUMMARY_ART_MID, COLOR_ART))
-    lines.append(colorize(SUMMARY_ART_BOT, COLOR_ART))
-    return "\n".join(lines), groups
+    lines.append(SUMMARY_SEP)
+    return "\n".join(lines)
 
 
-def run_big_case(pyfile, testname, roots):
-    """执行一个大用例（py 文件 + 用例名）的所有参数组合。
+def run_big_case(pyfile, testname, roots, write):
+    """执行一个大用例的所有参数组合，实时写入日志。
 
-    返回 (日志文本, {nodeid: status}, summary 文本)。
+    返回 (nodeid -> status 映射, summary 文本)。
     """
-    lines = [STAR_SEP, STAR_SEP, STAR_SEP]
-    lines.append("大用例: %s :: %s" % (pyfile, testname))
+    write(STAR_SEP)
+    write(STAR_SEP)
+    write(STAR_SEP)
+    write("大用例: %s :: %s" % (pyfile, testname))
 
     filepath, workdir = find_file(pyfile, roots)
     if not filepath:
-        lines.append("[错误] 未在搜索根目录中找到文件 %s" % pyfile)
-        lines.append("搜索根目录: %s" % roots)
-        lines.append(STAR_SEP)
-        return "\n".join(lines), {}, ""
+        write("[错误] 未在搜索根目录中找到文件 %s" % pyfile)
+        write("搜索根目录: %s" % roots)
+        write(STAR_SEP)
+        return {}, ""
 
-    lines.append("文件路径: %s" % filepath)
-    lines.append("工作目录: %s" % workdir)
+    write("文件路径: %s" % filepath)
+    write("工作目录: %s" % workdir)
 
     nodeids, rc, collect_out = collect_nodeids(pyfile, workdir, testname)
     if not nodeids:
-        lines.append("[错误] 未收集到用例 %s 的任何参数组合 (returncode=%d)" % (testname, rc))
-        lines.append(THIN_SEP)
-        lines.append("pytest --collect-only 输出:")
-        lines.append(collect_out.rstrip("\n"))
-        lines.append(STAR_SEP)
-        return "\n".join(lines), {}, ""
+        write("[错误] 未收集到用例 %s 的任何参数组合 (returncode=%d)" % (testname, rc))
+        write(THIN_SEP)
+        write("pytest --collect-only 输出:")
+        write(collect_out.rstrip("\n"))
+        write(STAR_SEP)
+        return {}, ""
 
-    lines.append("参数组合数: %d" % len(nodeids))
+    write("参数组合数: %d    并行线程数: %s" % (
+        len(nodeids), MAX_PARALLEL if MAX_PARALLEL > 0 else "不限"))
 
     total = len(nodeids)
     box = {}
+    sem = threading.Semaphore(MAX_PARALLEL) if MAX_PARALLEL > 0 else None
     threads = []
     for i, nodeid in enumerate(nodeids, 1):
-        t = threading.Thread(target=_worker, args=(i, total, nodeid, workdir, box))
+        t = threading.Thread(target=_worker, args=(i, total, nodeid, workdir, write, box, sem))
         t.start()
         threads.append(t)
     for t in threads:
         t.join()
 
-    for i in range(1, total + 1):
-        lines.append(box[i][1])
+    summary_text = build_summary(nodeids, box)
+    write(summary_text)
+    write(STAR_SEP)
 
-    summary_text, _groups = build_summary(nodeids, box)
-    lines.append(summary_text)
-    lines.append(STAR_SEP)
-
-    status_map = {nodeid: box[i][0] for i, nodeid in enumerate(nodeids, 1)}
-    return "\n".join(lines), status_map, summary_text
+    status_map = {nodeid: box[i] for i, nodeid in enumerate(nodeids, 1)}
+    return status_map, summary_text
 
 
 # ============================ 入口 ============================
@@ -336,17 +408,16 @@ def main():
     handles = {}
     overall = []  # (大用例标题, {nodeid: status})
     for pyfile, testname in cases:
-        block, status_map, summary_text = run_big_case(pyfile, testname, roots)
-
         stem = os.path.splitext(os.path.basename(pyfile))[0]
         if stem not in handles:
             log_path = os.path.join(LOG_DIR, "%s_%s.log" % (stem, run_ts))
-            handles[stem] = open(log_path, "w", encoding="utf-8")
-            handles[stem].write("清单来源: %s\n搜索根目录: %s\n\n" % (source, roots))
-        handles[stem].write(block + "\n\n")
-        handles[stem].flush()
+            handle = open(log_path, "w", encoding="utf-8")
+            handle.write("清单来源: %s\n搜索根目录: %s\n\n" % (source, roots))
+            handle.flush()
+            handles[stem] = handle
+        write = make_writer(handles[stem])
 
-        # 控制台同步打印 summary（含颜色图案）
+        status_map, summary_text = run_big_case(pyfile, testname, roots, write)
         if summary_text:
             print(summary_text)
 
@@ -368,9 +439,11 @@ def main():
         all_pass += p
         all_fail += f
         all_skip += s
-        print("%-60s PASS=%-3d FAIL=%-3d SKIP=%-3d" % (title, p, f, s))
+        print("%-60s %s %d  %s %d  %s %d"
+              % (title, EMOJI_PASS, p, EMOJI_FAIL, f, EMOJI_SKIP, s))
     print("-" * 100)
-    print("总计: PASS=%d  FAIL=%d  SKIP=%d" % (all_pass, all_fail, all_skip))
+    print("总计: %s %d  %s %d  %s %d"
+          % (EMOJI_PASS, all_pass, EMOJI_FAIL, all_fail, EMOJI_SKIP, all_skip))
     print("日志文件已保存到: %s" % LOG_DIR)
 
 

@@ -1,0 +1,453 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.13, pytest-8.4.2, pluggy-1.6.0 -- /usr/local/python3.11.13/bin/python3.11
+cachedir: .pytest_cache
+hypothesis profile 'default' -> database=DirectoryBasedExampleDatabase('/data/q00887602/aten_op_test/.hypothesis/examples')
+rootdir: /data/q00887602/aten_op_test
+plugins: hypothesis-6.70.1, anyio-4.10.0
+collecting ... collected 1 item
+
+script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py::TestFusionBase11CatClampMm::test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16 2026-11-25 07:10:22.617[INFO][testutils:351]ratio_result=================================== CASE TestFusionBase11CatClampMm START ===================================
+2026-11-25 07:10:22.618[INFO][testutils:271]clear env done: /tmp/torchinductor_root
+2026-11-25 07:10:23.118[WARNING][testutils:268]~/.triton/dump 路径不存在
+2026-11-25 07:10:23.118[WARNING][testutils:268]~/.triton/cache 路径不存在
+2026-11-25 07:10:23.118[WARNING][testutils:268]/tmp/torchinductor_root 路径不存在
+2026-11-25 07:10:23.119[INFO][testutils:271]clear env done: torch_compile_debug
+2026-11-25 07:10:23.620[INFO][testutils:364]=-=-=-=-=-=-=-=-=-=-=-=- TestCase_ID: test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm.test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16 -=-=-=-=-=-=-=-=-=-=-=-=
+The selected atenop is aten_cat, aten_clamp_min and aten_mm
+2026-11-25 07:10:26.796[INFO][testutils:486]eager-func success
+2026-11-25 07:10:27.011[INFO][testutils:495]inductor-func compile success
+W1125 07:10:48.011000 17537 site-packages/torch/_inductor/debug.py:545] [0/0] model__0_inference_0 debug trace: torch_compile_debug/torchinductor/model__0_inference_0.0
+2026-11-25 07:10:49.040[INFO][testutils:502]inductor-func success
+2026-11-25 07:10:49.040[INFO][testutils:807]output_code files: ['torch_compile_debug/torchinductor/model__0_inference_0.0/output_code.py']
+[W1125 07:10:49.420266783 ToKernelNpu.cpp:40] Warning: Device do not support double dtype now, dtype cast replace with float. (function operator())
+在第 87 行发现@triton.jit
+std_result:
+tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  2457600.,  -520192.,  ...,   387072.,   733184.,
+            37376.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        ...,
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [ -573440., -1482752.,   313344.,  ...,  -234496.,  -442368.,
+           -22528.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+inductor_result:
+tensor([[ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  946176.,  2441216.,  -518144.,  ...,   387072.,   733184.,
+            37376.],
+        [ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        ...,
+        [ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [ -573440., -1482752.,   313344.,  ...,  -234496.,  -442368.,
+           -22528.],
+        [ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+===============eager和compile精度不通过:<bound method TestCase.id of <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>>=====================================
+Tensor-likes are not close!
+
+Mismatched elements: 14454 / 65534 (22.1%)
+Greatest absolute difference: 32768.0 at index (0, 130) (up to 0.005 allowed)
+Greatest relative difference: 0.0078125 at index (0, 10) (up to 0.005 allowed)
+===============================================================================================
+compare with cpu
+cpu_result:
+tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  2457600.,  -520192.,  ...,   387072.,   733184.,
+            37376.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        ...,
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [ -573440., -1482752.,   313344.,  ...,  -234496.,  -442368.,
+           -22528.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], dtype=torch.bfloat16)
+inductor vs cpu
+inductor vs cpu fail
+Tensor-likes are not close!
+
+Mismatched elements: 14454 / 65534 (22.1%)
+Greatest absolute difference: 32768.0 at index (0, 130) (up to 0.005 allowed)
+Greatest relative difference: 0.0078125 at index (0, 10) (up to 0.005 allowed)
+eager vs cpu
+2026-11-25 07:10:51.896[INFO][testutils:370]param_shape: (7, 1, 9362), param_dtype: bfloat16, error_message: Precision verification failed, used_func: func
+2026-11-25 07:10:51.900[INFO][testutils:415]Target directory '/data/q00887602/aten_op_test/results_20261125_071022/output_code' is ready (created if it did not exist).
+2026-11-25 07:10:51.900[INFO][testutils:421]File copy successful!
+2026-11-25 07:10:51.900[INFO][testutils:422]  Source file: torch_compile_debug/torchinductor/model__0_inference_0.0/output_code.py
+2026-11-25 07:10:51.900[INFO][testutils:423]  Target file: /data/q00887602/aten_op_test/results_20261125_071022/output_code/test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16_(7, 1, 9362).py
+2026-11-25 07:10:51.918[INFO][testutils:271]clear env done: /tmp/torchinductor_root
+2026-11-25 07:10:52.418[WARNING][testutils:268]~/.triton/dump 路径不存在
+2026-11-25 07:10:52.418[WARNING][testutils:268]~/.triton/cache 路径不存在
+2026-11-25 07:10:52.418[WARNING][testutils:268]/tmp/torchinductor_root 路径不存在
+2026-11-25 07:10:52.419[INFO][testutils:271]clear env done: torch_compile_debug
+2026-11-25 07:10:52.919[INFO][testutils:430]Test results saved to: /data/q00887602/aten_op_test/results_20261125_071022/atenop_result_table.csv
+FAILED2026-11-25 07:10:53.032[INFO][testutils:360]=================================== CASE TestFusionBase11CatClampMm END ===================================
+2026-11-25 07:10:53.032[INFO][testutils:361]accuracy_result:0/1,ratio_result:0/1
+
+
+=================================== FAILURES ===================================
+_ TestFusionBase11CatClampMm.test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16 _
+
+self = <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>
+eager_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...-950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+inductor_result = tensor([[ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  946176.,  244121...-946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+dtype = 'bfloat16', equal_nan = True
+
+    def accuracy_validate(self, eager_result, inductor_result, dtype, equal_nan=True):
+        if not self.param_dtype:
+            self.param_dtype = dtype
+        if dtype == 'float64':
+            self.rtol, self.atol = 1e-8, 1e-10
+        elif dtype == 'float32':
+            self.rtol, self.atol = 1e-5, 1e-5
+        elif dtype == 'float16':
+            self.rtol, self.atol = 1e-3, 1e-3
+        elif dtype == 'bfloat16':
+            self.rtol, self.atol = 5e-3, 5e-3
+        elif dtype == 'uint8' or dtype == 'int8':
+            self.rtol, self.atol = 1e-2, 1e-3
+        else:
+            self.rtol, self.atol = 0, 0
+        try:
+            if dtype == 'bool':
+                def not_bool(x):
+                    if isinstance(x, torch.Tensor):
+                        return ~x
+                    elif isinstance(x, list) or isinstance(x, tuple):
+                        not_x=[]
+                        for i in x:
+                            not_x.append(not_bool(i))
+                        return not_x
+                torch.testing.assert_close(not_bool(eager_result), not_bool(inductor_result), equal_nan=equal_nan, rtol=self.rtol, atol=self.atol)
+            else:
+>               torch.testing.assert_close(eager_result, inductor_result, equal_nan=equal_nan, rtol=self.rtol, atol=self.atol)
+E               AssertionError: Tensor-likes are not close!
+E               
+E               Mismatched elements: 14454 / 65534 (22.1%)
+E               Greatest absolute difference: 32768.0 at index (0, 130) (up to 0.005 allowed)
+E               Greatest relative difference: 0.0078125 at index (0, 10) (up to 0.005 allowed)
+
+testutils.py:872: AssertionError
+
+The above exception was the direct cause of the following exception:
+
+self = <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>
+eager_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...-950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+inductor_result = tensor([[ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  946176.,  244121...-946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+dtype = 'bfloat16'
+func = <function TestFusionBase11CatClampMm.test_fusion_base_11_cat_clamp_mm.<locals>.fusion at 0x7fe880f2e980>
+args = (tensor([[-3232.],
+        [ 1144.],
+        [-1024.],
+        [-1824.],
+        [-2320.],
+        [ -454.],
+        [...64.0000, 3264.0000, -692.0000,  ...,  516.0000,  976.0000,
+           49.7500]], device='npu:0', dtype=torch.bfloat16))
+args_cpu = [tensor([[-3232.],
+        [ 1144.],
+        [-1024.],
+        [-1824.],
+        [-2320.],
+        [ -454.],
+        [...16), tensor([[1264.0000, 3264.0000, -692.0000,  ...,  516.0000,  976.0000,
+           49.7500]], dtype=torch.bfloat16)]
+cpu_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...28.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], dtype=torch.bfloat16)
+
+    def compare_with_cpu(self, eager_result, inductor_result, dtype, func, *args):
+        try:
+>           self.accuracy_validate(eager_result, inductor_result, dtype)
+
+testutils.py:927: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>
+eager_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...-950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+inductor_result = tensor([[ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  946176.,  244121...-946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+dtype = 'bfloat16', equal_nan = True
+
+    def accuracy_validate(self, eager_result, inductor_result, dtype, equal_nan=True):
+        if not self.param_dtype:
+            self.param_dtype = dtype
+        if dtype == 'float64':
+            self.rtol, self.atol = 1e-8, 1e-10
+        elif dtype == 'float32':
+            self.rtol, self.atol = 1e-5, 1e-5
+        elif dtype == 'float16':
+            self.rtol, self.atol = 1e-3, 1e-3
+        elif dtype == 'bfloat16':
+            self.rtol, self.atol = 5e-3, 5e-3
+        elif dtype == 'uint8' or dtype == 'int8':
+            self.rtol, self.atol = 1e-2, 1e-3
+        else:
+            self.rtol, self.atol = 0, 0
+        try:
+            if dtype == 'bool':
+                def not_bool(x):
+                    if isinstance(x, torch.Tensor):
+                        return ~x
+                    elif isinstance(x, list) or isinstance(x, tuple):
+                        not_x=[]
+                        for i in x:
+                            not_x.append(not_bool(i))
+                        return not_x
+                torch.testing.assert_close(not_bool(eager_result), not_bool(inductor_result), equal_nan=equal_nan, rtol=self.rtol, atol=self.atol)
+            else:
+                torch.testing.assert_close(eager_result, inductor_result, equal_nan=equal_nan, rtol=self.rtol, atol=self.atol)
+        except Exception as e:
+            # self.error_message = "Precision verification failed"
+    
+            print(f"==============={self.compare_target}和compile精度不通过:{self.id}=====================================")
+            print(f"{e}")
+            print("===============================================================================================")
+>           raise AssertionError(f"inductor vs {self.compare_target} Precision verification failed: {e}") from e
+E           AssertionError: inductor vs eager Precision verification failed: Tensor-likes are not close!
+E           
+E           Mismatched elements: 14454 / 65534 (22.1%)
+E           Greatest absolute difference: 32768.0 at index (0, 130) (up to 0.005 allowed)
+E           Greatest relative difference: 0.0078125 at index (0, 10) (up to 0.005 allowed)
+
+testutils.py:879: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>
+eager_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...-950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+inductor_result = tensor([[ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  946176.,  244121...-946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+dtype = 'bfloat16'
+func = <function TestFusionBase11CatClampMm.test_fusion_base_11_cat_clamp_mm.<locals>.fusion at 0x7fe880f2e980>
+args = (tensor([[-3232.],
+        [ 1144.],
+        [-1024.],
+        [-1824.],
+        [-2320.],
+        [ -454.],
+        [...64.0000, 3264.0000, -692.0000,  ...,  516.0000,  976.0000,
+           49.7500]], device='npu:0', dtype=torch.bfloat16))
+args_cpu = [tensor([[-3232.],
+        [ 1144.],
+        [-1024.],
+        [-1824.],
+        [-2320.],
+        [ -454.],
+        [...16), tensor([[1264.0000, 3264.0000, -692.0000,  ...,  516.0000,  976.0000,
+           49.7500]], dtype=torch.bfloat16)]
+cpu_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...28.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], dtype=torch.bfloat16)
+
+    def compare_with_cpu(self, eager_result, inductor_result, dtype, func, *args):
+        try:
+            self.accuracy_validate(eager_result, inductor_result, dtype)
+        except AssertionError:
+            print("compare with cpu")
+            try:
+                args_cpu = self.move_tensors_to_cpu(args)
+                cpu_result = func(*args_cpu)
+                print(f"cpu_result:\n{cpu_result}")
+                try:
+                    print(f"inductor vs cpu")
+                    torch.testing.assert_close(cpu_result, self.move_tensors_to_cpu(inductor_result), equal_nan=True, rtol=self.rtol, atol=self.atol)
+                except AssertionError as e:
+                    print(f"inductor vs cpu fail")
+                    print(f"{e}")
+                try:
+                    print(f"eager vs cpu")
+                    torch.testing.assert_close(cpu_result, self.move_tensors_to_cpu(eager_result), equal_nan=True, rtol=self.rtol, atol=self.atol)
+                except AssertionError as e:
+                    print(f"eager vs cpu fail")
+                    print(f"{e}")
+    
+                if dtype == 'bool':
+                    raise AssertionError("Boolean dtype comparison not supported")
+>               self.compare_with_cpu_diff(self.move_tensors_to_cpu(eager_result), self.move_tensors_to_cpu(inductor_result), cpu_result)
+
+testutils.py:949: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+testutils.py:920: in compare_with_cpu_diff
+    self.assertLessEqual(inductor_cpu_diff , eager_cpu_diff)
+E   AssertionError: 2637.90087890625 not less than or equal to 0.0
+
+The above exception was the direct cause of the following exception:
+
+self = <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>
+shape = (7, 1, 9362), dtype = 'bfloat16'
+
+    @parametrize("shape", TestUtils._pointwise_demo_shapes_mm)
+    @parametrize('dtype', ['int8', 'int32', 'int64', 'float16', 'float32', 'bfloat16', 'bool'])
+    def test_fusion_base_11_cat_clamp_mm(self, shape, dtype):
+        if dtype not in SPEC_DTYPES[aten_cat.__name__]:
+            return
+        mid_dtype = OUTPUT_DTYPE[aten_cat.__name__][dtype]
+        if mid_dtype not in SPEC_DTYPES[aten_clamp_min.__name__]:
+            return
+        out_dtype = OUTPUT_DTYPE[aten_clamp_min.__name__][mid_dtype]
+        if out_dtype not in SPEC_DTYPES[aten_mm.__name__] or dtype not in SPEC_DTYPES[aten_mm.__name__]:
+            return
+        print(f"The selected atenop is {aten_cat.__name__}, "
+              f"{aten_clamp_min.__name__} and {aten_mm.__name__}")
+    
+        def fusion(tensor,other):
+            y=torch.ops.aten.cat([tensor[:1,:],tensor[0:,:]], 0)
+            return torch.ops.aten.mm(torch.ops.aten.clamp(tensor,-750,750), other)
+    
+        def fusion_1(tensor,other):
+            y=torch.ops.aten.cat([tensor[:1,:],tensor[0:,:]], 0)
+            result = torch.ops.aten.mm(torch.ops.aten.clamp(tensor,-750,750), other)
+            return result + result
+    
+        m,k,n=shape
+        tensor = self._generate_tensor((m,k), dtype)
+        other = self._generate_tensor((k,n), dtype)
+        self.isMmType = True
+>       return self.execute_inductor_test(shape, dtype, fusion, fusion_1, tensor, other,
+                                          op_name=aten_cat.__name__)
+
+script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+testutils.py:602: in execute_inductor_test
+    self.compare_with_cpu(std_result, inductor_result, res_dtype, last_func, *args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_fusion_base_11_cat_clamp_mm.TestFusionBase11CatClampMm testMethod=test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16>
+eager_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...-950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+inductor_result = tensor([[ -946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  946176.,  244121...-946176., -2441216.,   518144.,  ...,  -387072.,  -733184.,
+           -37376.]], device='npu:0', dtype=torch.bfloat16)
+dtype = 'bfloat16'
+func = <function TestFusionBase11CatClampMm.test_fusion_base_11_cat_clamp_mm.<locals>.fusion at 0x7fe880f2e980>
+args = (tensor([[-3232.],
+        [ 1144.],
+        [-1024.],
+        [-1824.],
+        [-2320.],
+        [ -454.],
+        [...64.0000, 3264.0000, -692.0000,  ...,  516.0000,  976.0000,
+           49.7500]], device='npu:0', dtype=torch.bfloat16))
+args_cpu = [tensor([[-3232.],
+        [ 1144.],
+        [-1024.],
+        [-1824.],
+        [-2320.],
+        [ -454.],
+        [...16), tensor([[1264.0000, 3264.0000, -692.0000,  ...,  516.0000,  976.0000,
+           49.7500]], dtype=torch.bfloat16)]
+cpu_result = tensor([[ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.],
+        [  950272.,  245760...28.],
+        [ -950272., -2457600.,   520192.,  ...,  -387072.,  -733184.,
+           -37376.]], dtype=torch.bfloat16)
+
+    def compare_with_cpu(self, eager_result, inductor_result, dtype, func, *args):
+        try:
+            self.accuracy_validate(eager_result, inductor_result, dtype)
+        except AssertionError:
+            print("compare with cpu")
+            try:
+                args_cpu = self.move_tensors_to_cpu(args)
+                cpu_result = func(*args_cpu)
+                print(f"cpu_result:\n{cpu_result}")
+                try:
+                    print(f"inductor vs cpu")
+                    torch.testing.assert_close(cpu_result, self.move_tensors_to_cpu(inductor_result), equal_nan=True, rtol=self.rtol, atol=self.atol)
+                except AssertionError as e:
+                    print(f"inductor vs cpu fail")
+                    print(f"{e}")
+                try:
+                    print(f"eager vs cpu")
+                    torch.testing.assert_close(cpu_result, self.move_tensors_to_cpu(eager_result), equal_nan=True, rtol=self.rtol, atol=self.atol)
+                except AssertionError as e:
+                    print(f"eager vs cpu fail")
+                    print(f"{e}")
+    
+                if dtype == 'bool':
+                    raise AssertionError("Boolean dtype comparison not supported")
+                self.compare_with_cpu_diff(self.move_tensors_to_cpu(eager_result), self.move_tensors_to_cpu(inductor_result), cpu_result)
+            except AssertionError as e:
+                self.error_message = "Precision verification failed"
+>               raise AssertionError(f"EAGER-CPU NPU-CPU Precision verification failed: {e}") from e
+E               AssertionError: EAGER-CPU NPU-CPU Precision verification failed: 2637.90087890625 not less than or equal to 0.0
+E               
+E               To execute this test, run the following from the base repo dir:
+E                   python test_fusion_base_11_cat_clamp_mm.py TestFusionBase11CatClampMm.test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16
+E               
+E               This message can be suppressed by setting PYTORCH_PRINT_REPRO_ON_FAILURE=0
+
+testutils.py:952: AssertionError
+=============================== warnings summary ===============================
+../../../usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:13
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:13: FutureWarning: triton.language.extra.cann.extension.atan2 is deprecated and will be removed in the next release; use triton.language.extra.cann.libdevice.atan2 instead.
+    @_deprecated(replacement="triton.language.extra.cann.libdevice.atan2")
+
+../../../usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:35
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:35: FutureWarning: triton.language.extra.cann.extension.isfinited is deprecated and will be removed in the next release; use triton.language.extra.cann.libdevice.isfinited instead.
+    @_deprecated(replacement="triton.language.extra.cann.libdevice.isfinited")
+
+../../../usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:49
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:49: FutureWarning: triton.language.extra.cann.extension.finitef is deprecated and will be removed in the next release; use triton.language.extra.cann.libdevice.finitef instead.
+    @_deprecated(replacement="triton.language.extra.cann.libdevice.finitef")
+
+script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py::TestFusionBase11CatClampMm::test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16
+  /usr/local/python3.11.13/lib/python3.11/site-packages/torch_npu/utils/storage.py:61: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+    if self.device.type == "npu":
+
+script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py: 14 warnings
+  /usr/local/python3.11.13/lib/python3.11/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py::TestFusionBase11CatClampMm::test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/backends/ascend/compiler.py:1666: FutureWarning: Ascend environment variable 'TRITON_DISABLE_FFTS' is deprecated and will be removed in a future release; it is ignored; FFTS policy is derived from the explicit target architecture.
+    _warn_deprecated_ascend_env_vars()
+
+script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py::TestFusionBase11CatClampMm::test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/backends/ascend/compiler.py:1679: FutureWarning: Ascend compile option 'enable_vf_fusion' is deprecated and will be removed in a future release; it is ignored; this switch is no longer forwarded to the NPU compiler.
+    normalized_opts = opts if internal_options else _remove_deprecated_npu_options(opts)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED script/fusion/base/new_base/test_fusion_base_11_cat_clamp_mm.py::TestFusionBase11CatClampMm::test_fusion_base_11_cat_clamp_mm_shape1_dtype_bfloat16
+======================= 1 failed, 20 warnings in 38.21s ========================

@@ -1,0 +1,191 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.13, pytest-8.4.2, pluggy-1.6.0 -- /usr/local/python3.11.13/bin/python3.11
+cachedir: .pytest_cache
+hypothesis profile 'default' -> database=DirectoryBasedExampleDatabase('/data/q00887602/aten_op_test/.hypothesis/examples')
+rootdir: /data/q00887602/aten_op_test
+plugins: hypothesis-6.70.1, anyio-4.10.0
+collecting ... collected 16 items / 15 deselected / 1 selected
+
+script/fusion/pairwise/test_fusion_pairwise_P24.py::TestFusionPairwiseP24::test_fusion_pairwise_P24_shape3_dtype_float32 2026-11-28 02:18:14.930[INFO][testutils:351]ratio_result=================================== CASE TestFusionPairwiseP24 START ===================================
+2026-11-28 02:18:14.930[INFO][testutils:271]clear env done: /tmp/torchinductor_root
+2026-11-28 02:18:15.430[WARNING][testutils:268]~/.triton/dump 路径不存在
+2026-11-28 02:18:15.430[WARNING][testutils:268]~/.triton/cache 路径不存在
+2026-11-28 02:18:15.430[WARNING][testutils:268]/tmp/torchinductor_root 路径不存在
+2026-11-28 02:18:15.430[WARNING][testutils:268]torch_compile_debug 路径不存在
+2026-11-28 02:18:15.431[INFO][testutils:364]=-=-=-=-=-=-=-=-=-=-=-=- TestCase_ID: test_fusion_pairwise_P24.TestFusionPairwiseP24.test_fusion_pairwise_P24_shape3_dtype_float32 -=-=-=-=-=-=-=-=-=-=-=-=
+2026-11-28 02:18:15.822[WARNING][testutils:268]/tmp/torchinductor_root 路径不存在
+2026-11-28 02:18:15.822[WARNING][testutils:268]~/.triton/dump 路径不存在
+2026-11-28 02:18:15.822[WARNING][testutils:268]~/.triton/cache 路径不存在
+2026-11-28 02:18:15.822[WARNING][testutils:268]/tmp/torchinductor_root 路径不存在
+2026-11-28 02:18:15.822[WARNING][testutils:268]torch_compile_debug 路径不存在
+P24 2x7 NaN/inf: shape=(255, 257), dtype=float32
+2026-11-28 02:18:17.574[INFO][testutils:489]eager-func success
+2026-11-28 02:18:18.520[INFO][testutils:498]inductor-func compile success
+W1128 02:18:37.504000 22990 site-packages/torch/_inductor/debug.py:545] [0/0] model__0_inference_0 debug trace: torch_compile_debug/torchinductor/model__0_inference_0.0
+2026-11-28 02:18:37.735[INFO][testutils:505]inductor-func success
+2026-11-28 02:18:37.736[INFO][testutils:810]output_code files: ['torch_compile_debug/torchinductor/model__0_inference_0.0/output_code.py']
+[W1128 02:18:37.093332437 ToKernelNpu.cpp:40] Warning: Device do not support double dtype now, dtype cast replace with float. (function operator())
+在第 78 行发现@triton.jit
+std_result:
+tensor([        nan,         inf,        -inf,  36052.5312, -26978.0469,
+        -23415.4121,  63815.0156, -33030.9961, -44015.5938,   1083.7148,
+         24721.5781, -22684.9219, -27776.5391,   9672.3340,  34445.8828,
+         39249.4492,  -6530.9834, -15792.4912, -17106.9922, -10364.1709,
+        -40846.8203,  41921.0156,  -1046.2236,  29938.9023, -13101.3613,
+        -36648.3477,  -3383.4473,    801.2090,  -1903.1289,  87029.1250,
+        -17172.5234,  36725.0703,   -692.4746, -12248.3213,  17832.1406,
+         20862.4414,  17624.2031,   -300.9316,   6490.0713,  -6511.6367,
+         -8999.9961,  37100.6641,   4772.6211, -14694.7637, -26029.0703,
+         30721.2324,  -5694.0059,  44792.7422,  -2470.6289,  36581.3750,
+        -22722.8789, -28416.7383,  24483.7715,   9736.6006, -15051.2227,
+         14861.9609,  33206.5938, -31916.2656, -40963.7383,  22330.9824,
+         18081.8008,  61910.2461,  13389.6719, -67482.9297, -28799.5137,
+         12043.2480, -49475.9141,  27505.0254, -12940.7129,  25295.0879,
+         35078.5469, -31179.3418, -63725.1953,  11080.3242,  60127.8906,
+         49357.2891,  11785.9570, -13968.6133,   -917.2295,   5968.8066,
+        -58328.7031,  -7866.9434, -37668.2500,  49633.8164, -20361.0703,
+        -63202.6133, -22815.6289,  43696.8359, -23211.9238, -13213.8047,
+        -48305.3594, -28747.7656,  -5234.6401,  55134.5039, -23141.2305,
+         43914.5625,   2353.9353,  42106.5781,  13617.9727,  33954.2031,
+        -21379.9883,  47160.8008,  77172.3125, -31928.7266,  66451.8672,
+          6445.5312, -14139.4043, -18002.6328,  54541.0859, -36119.7070,
+         26253.3164,  49228.8516,  15248.0840,  13646.4053,  23661.6445,
+        -14158.6426,  36620.7031, -53138.0117,  49707.6719,   2368.8184,
+        -46012.0938,   3648.9531,   3721.5186, -24622.5547,  -6212.6855,
+        -31314.2734, -47535.8672,  62381.6484, -42612.5000, -56472.4531,
+        -27510.5059,  19785.5098, -12744.8477,  -9793.0713,  56238.7500,
+         35078.3945, -17385.8496, -50189.0742,  16503.2344,  56740.1797,
+        -35273.3359,  48015.0703, -18108.2227,  59956.7500,  32210.2578,
+         33947.8516, -19714.4629,  -3387.3945,  39320.7422,  38488.4102,
+         30040.0605, -20415.1992,  15043.0889,    296.7224,   6760.5244,
+         -1491.8438, -12105.5479,   4679.3193, -14850.4609,   6952.6445,
+         13027.8477,   7359.5439,   -395.8809,   8283.0801, -29911.4336,
+        -19691.5840,   1816.4785,  -3820.3320, -18539.8828,   1831.2910,
+        -11670.0957, -16860.2168,  36111.5234, -36411.5469,  92569.6250,
+         23426.7109, 107971.4219,  -7329.9023,  33769.1797, -39927.0547,
+        -14689.7852,  34865.7578, -41506.5664,  13235.5635,   5385.6606,
+         -2847.0801, -12501.1348,  11916.1016,   4172.4609, -17766.7168,
+         -4343.5186,  15524.6270, -39107.1719, -30981.0820,  15550.2930,
+        -35128.6602,  39584.7109, -48225.2656,    802.9785,  35043.4141,
+         -5514.6875,   8904.1074, -12425.1846,  18116.1367,  17247.3105,
+         23098.5234, -11815.6250,  20070.9336, -11276.5527,  73317.3047,
+        -24011.2812,  -3908.0352,  -4457.6133, -29747.7695,  -5104.8281,
+         41770.8242,  65787.8125, -13538.6592, -76534.2188,  10540.1055,
+         33158.8438,   6562.6113,  17905.1875,   4431.4883,  48928.8750,
+         20901.1211, -38172.2812,  50751.8828, -34773.1758, -23481.6836,
+         34934.8516,   1046.2676,  -3848.3906, -29279.2500, -17717.4609,
+         -3844.0674, -50489.3125,  -6154.1465,   7525.6133, -32344.3984,
+        -29569.2520,  38887.6484, -33360.2070, -52161.0977,  -7591.3330,
+           552.9438, -48194.6875, -41712.0664,  20277.7539,  61422.1602,
+        -10910.6787,  10502.1660, -20752.2773,   3362.8359,   6801.6875],
+       device='npu:0')
+inductor_result:
+tensor([        nan,         inf,        -inf,  36052.5312, -26978.0469,
+        -23415.4121,  63815.0156, -33030.9961, -44015.5938,   1083.7148,
+         24721.5781, -22684.9219, -27776.5391,   9672.3340,  34445.8828,
+         39249.4492,  -6530.9834, -15792.4912, -17106.9922, -10364.1709,
+        -40846.8203,  41921.0156,  -1046.2236,  29938.9023, -13101.3613,
+        -36648.3477,  -3383.4473,    801.2090,  -1903.1289,  87029.1250,
+        -17172.5234,  36725.0703,   -692.4746, -12248.3213,  17832.1406,
+         20862.4414,  17624.2031,   -300.9316,   6490.0713,  -6511.6367,
+         -8999.9961,  37100.6641,   4772.6211, -14694.7637, -26029.0703,
+         30721.2324,  -5694.0059,  44792.7422,  -2470.6289,  36581.3750,
+        -22722.8789, -28416.7383,  24483.7715,   9736.6006, -15051.2227,
+         14861.9609,  33206.5938, -31916.2656, -40963.7383,  22330.9824,
+         18081.8008,  61910.2461,  13389.6719, -67482.9297, -28799.5137,
+         12043.2480, -49475.9141,  27505.0254, -12940.7129,  25295.0879,
+         35078.5469, -31179.3418, -63725.1953,  11080.3242,  60127.8906,
+         49357.2891,  11785.9570, -13968.6133,   -917.2295,   5968.8066,
+        -58328.7031,  -7866.9434, -37668.2500,  49633.8164, -20361.0703,
+        -63202.6133, -22815.6289,  43696.8359, -23211.9238, -13213.8047,
+        -48305.3594, -28747.7656,  -5234.6401,  55134.5039, -23141.2305,
+         43914.5625,   2353.9353,  42106.5781,  13617.9727,  33954.2031,
+        -21379.9883,  47160.8008,  77172.3125, -31928.7266,  66451.8672,
+          6445.5312, -14139.4043, -18002.6328,  54541.0859, -36119.7070,
+         26253.3164,  49228.8516,  15248.0840,  13646.4053,  23661.6445,
+        -14158.6426,  36620.7031, -53138.0117,  49707.6719,   2368.8184,
+        -46012.0938,   3648.9531,   3721.5186, -24622.5547,  -6212.6855,
+        -31314.2734, -47535.8672,  62381.6484, -42612.5000, -56472.4531,
+        -27510.5059,  19785.5098, -12744.8477,  -9793.0713,  56238.7500,
+         35078.3945, -17385.8496, -50189.0742,  16503.2344,  56740.1797,
+        -35273.3359,  48015.0703, -18108.2227,  59956.7500,  32210.2578,
+         33947.8516, -19714.4629,  -3387.3945,  39320.7422,  38488.4102,
+         30040.0605, -20415.1992,  15043.0889,    296.7224,   6760.5244,
+         -1491.8438, -12105.5479,   4679.3193, -14850.4609,   6952.6445,
+         13027.8477,   7359.5439,   -395.8809,   8283.0801, -29911.4336,
+        -19691.5840,   1816.4785,  -3820.3320, -18539.8828,   1831.2910,
+        -11670.0957, -16860.2168,  36111.5234, -36411.5469,  92569.6250,
+         23426.7109, 107971.4219,  -7329.9023,  33769.1797, -39927.0547,
+        -14689.7852,  34865.7578, -41506.5664,  13235.5635,   5385.6606,
+         -2847.0801, -12501.1348,  11916.1016,   4172.4609, -17766.7168,
+         -4343.5186,  15524.6270, -39107.1719, -30981.0820,  15550.2930,
+        -35128.6602,  39584.7109, -48225.2656,    802.9785,  35043.4141,
+         -5514.6875,   8904.1074, -12425.1846,  18116.1367,  17247.3105,
+         23098.5234, -11815.6250,  20070.9336, -11276.5527,  73317.3047,
+        -24011.2812,  -3908.0352,  -4457.6133, -29747.7695,  -5104.8281,
+         41770.8242,  65787.8125, -13538.6592, -76534.2188,  10540.1055,
+         33158.8438,   6562.6113,  17905.1875,   4431.4883,  48928.8750,
+         20901.1211, -38172.2812,  50751.8828, -34773.1758, -23481.6836,
+         34934.8516,   1046.2676,  -3848.3906, -29279.2500, -17717.4609,
+         -3844.0674, -50489.3125,  -6154.1465,   7525.6133, -32344.3984,
+        -29569.2520,  38887.6484, -33360.2070, -52161.0977,  -7591.3330,
+           552.9438, -48194.6875, -41712.0664,  20277.7539,  61422.1602,
+        -10910.6787,  10502.1660, -20752.2773,   3362.8359,   6801.6875],
+       device='npu:0')
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2026-11-28 02:18:37.956[INFO][testutils:603]Custom result validation passed; elementwise precision comparison is not used.
+[2026-11-28 02:18:38] [INFO] [24160] profiler.py: Start parsing profiling data in sync mode at: /data/q00887602/aten_op_test/result_dir/profiling_20261128_021837_9409/localhost.localdomain_22990_20261128021837960_ascend_pt
+|/-[2026-11-28 02:18:40] [INFO] [24169] profiler.py: CANN profiling data parsed in a total time of 0:00:02.039345
+\[2026-11-28 02:18:41] [INFO] [24160] profiler.py: All profiling data parsed in a total time of 0:00:03.183285
+========================profile data is 3.3666
+[2026-11-28 02:18:43] [INFO] [24407] profiler.py: Start parsing profiling data in sync mode at: /data/q00887602/aten_op_test/result_dir/profiling_20261128_021842_9560/localhost.localdomain_22990_20261128021842740_ascend_pt
+|/-[2026-11-28 02:18:45] [INFO] [24416] profiler.py: CANN profiling data parsed in a total time of 0:00:02.037621
+\[2026-11-28 02:18:46] [INFO] [24407] profiler.py: All profiling data parsed in a total time of 0:00:03.095019
+========================profile data is 2.622133333333333
+2026-11-28 02:18:47.317[INFO][testutils:694]case:<bound method TestCase.id of <test_fusion_pairwise_P24.TestFusionPairwiseP24 testMethod=test_fusion_pairwise_P24_shape3_dtype_float32>>, metric: profiler, 	param_dtype: float32, 	param_shape: (255, 257), 	eager: 3.3666, 	inductor:2.622133333333333, 	ratio: 1.2839164039458966, 	ratio_result: PASS, 	error_message: kernel generated
+2026-11-28 02:18:47.318[INFO][testutils:373]param_shape: (255, 257), param_dtype: float32, error_message: kernel generated, used_func: func
+2026-11-28 02:18:47.322[INFO][testutils:418]Target directory '/data/q00887602/aten_op_test/results_20261128_021814/output_code' is ready (created if it did not exist).
+2026-11-28 02:18:47.322[INFO][testutils:424]File copy successful!
+2026-11-28 02:18:47.322[INFO][testutils:425]  Source file: torch_compile_debug/torchinductor/model__0_inference_0.0/output_code.py
+2026-11-28 02:18:47.322[INFO][testutils:426]  Target file: /data/q00887602/aten_op_test/results_20261128_021814/output_code/test_fusion_pairwise_P24_shape3_dtype_float32_(255, 257).py
+2026-11-28 02:18:47.325[INFO][testutils:271]clear env done: /tmp/torchinductor_root
+2026-11-28 02:18:47.825[WARNING][testutils:268]~/.triton/dump 路径不存在
+2026-11-28 02:18:47.825[WARNING][testutils:268]~/.triton/cache 路径不存在
+2026-11-28 02:18:47.825[WARNING][testutils:268]/tmp/torchinductor_root 路径不存在
+2026-11-28 02:18:47.825[INFO][testutils:271]clear env done: torch_compile_debug
+2026-11-28 02:18:48.325[INFO][testutils:433]Test results saved to: /data/q00887602/aten_op_test/results_20261128_021814/atenop_result_table.csv
+PASSED2026-11-28 02:18:48.327[INFO][testutils:360]=================================== CASE TestFusionPairwiseP24 END ===================================
+2026-11-28 02:18:48.327[INFO][testutils:361]accuracy_result:1/1,ratio_result:1/1
+
+
+=============================== warnings summary ===============================
+../../../usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:13
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:13: FutureWarning: triton.language.extra.cann.extension.atan2 is deprecated and will be removed in the next release; use triton.language.extra.cann.libdevice.atan2 instead.
+    @_deprecated(replacement="triton.language.extra.cann.libdevice.atan2")
+
+../../../usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:35
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:35: FutureWarning: triton.language.extra.cann.extension.isfinited is deprecated and will be removed in the next release; use triton.language.extra.cann.libdevice.isfinited instead.
+    @_deprecated(replacement="triton.language.extra.cann.libdevice.isfinited")
+
+../../../usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:49
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/language/extra/cann/extension/math_ops.py:49: FutureWarning: triton.language.extra.cann.extension.finitef is deprecated and will be removed in the next release; use triton.language.extra.cann.libdevice.finitef instead.
+    @_deprecated(replacement="triton.language.extra.cann.libdevice.finitef")
+
+script/fusion/pairwise/test_fusion_pairwise_P24.py::TestFusionPairwiseP24::test_fusion_pairwise_P24_shape3_dtype_float32
+  /usr/local/python3.11.13/lib/python3.11/site-packages/torch_npu/utils/storage.py:61: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+    if self.device.type == "npu":
+
+script/fusion/pairwise/test_fusion_pairwise_P24.py: 14 warnings
+  /usr/local/python3.11.13/lib/python3.11/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+script/fusion/pairwise/test_fusion_pairwise_P24.py::TestFusionPairwiseP24::test_fusion_pairwise_P24_shape3_dtype_float32
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/backends/ascend/compiler.py:1666: FutureWarning: Ascend environment variable 'TRITON_DISABLE_FFTS' is deprecated and will be removed in a future release; it is ignored; FFTS policy is derived from the explicit target architecture.
+    _warn_deprecated_ascend_env_vars()
+
+script/fusion/pairwise/test_fusion_pairwise_P24.py::TestFusionPairwiseP24::test_fusion_pairwise_P24_shape3_dtype_float32
+  /usr/local/python3.11.13/lib/python3.11/site-packages/triton/backends/ascend/compiler.py:1679: FutureWarning: Ascend compile option 'enable_vf_fusion' is deprecated and will be removed in a future release; it is ignored; this switch is no longer forwarded to the NPU compiler.
+    normalized_opts = opts if internal_options else _remove_deprecated_npu_options(opts)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================ 1 passed, 15 deselected, 20 warnings in 38.21s ================
